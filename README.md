@@ -52,7 +52,8 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
 
     ip=`docker-machine ip default`   # Get the ip for later
 
-    docker-env --export              # exports the public CA key and the user private/public keys into env-ca.tgz
+    docker-env --export              # exports the public CA key and the user private/public 
+                                     # keys into env-ca.tgz
                                      # getting it from ~/.docker/docker_env/env-ca/certs
 
     docker-env --activate env-none   # Create a second environment
@@ -61,7 +62,8 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     
     docker-env --import env-ca.tgz   # Extract the certificates to ~/.docker/docker_env/env-none/certs
     
-    docker-env --create-machine $ip testmachine  # Creates a `docker-machine --driver none` machine pointing to $ip
+    docker-env --create-machine $ip testmachine  # Creates a `docker-machine --driver none` machine 
+                                                 #  pointing to $ip
                                                  # Copy the certificates to
                                                  #  ~/.docker/docker_env/env-none/machines/testmachine
 
@@ -72,7 +74,8 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     docker ps                        # Should connect and return empty container set
 
     docker-machine create -d virtualbox testmachine2  # Will fail, as we don´t have a valid CA:
-                                                      #  Error creating machine: Error running provisioning: error 
-                                                      #  generating server cert: 
-                                                      #  open ~/.docker/docker_env/env-none/certs/ca-key.pem: 
-                                                      #  no such file or directory
+                                                      #  Error creating machine: 
+                                                      #   Error running provisioning: error 
+                                                      #   generating server cert: 
+                                                      #   open ~/.docker/docker_env/env-none/certs/ca-key.pem: 
+                                                      #    no such file or directory
