@@ -37,7 +37,8 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
 
     docker-machine ls                # Should be empty
 
-    docker-machine create -d virtualbox default  # Create a local CA (Certificate Authority) and client certificates into:
+    docker-machine create -d virtualbox default  # Create a local CA (Certificate Authority) and client 
+                                                 # certificates into:
                                                  #  ~/.docker/docker_env/env-ca/certs
                                                  # Create a docker virtualbox machine called `default` into
                                                  #  ~/.docker/docker_env/env-ca/machines/default
@@ -71,4 +72,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     docker ps                        # Should connect and return empty container set
 
     docker-machine create -d virtualbox testmachine2  # Will fail, as we don´t have a valid CA:
-                                                      #  Error creating machine: Error running provisioning: error generating server cert: open ~/.docker/docker_env/env-none/certs/ca-key.pem: no such file or directory
+                                                      #  Error creating machine: Error running provisioning: error 
+                                                      #  generating server cert: 
+                                                      #  open ~/.docker/docker_env/env-none/certs/ca-key.pem: 
+                                                      #  no such file or directory
