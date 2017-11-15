@@ -85,3 +85,11 @@ Coworker then import the certificates and create a `--driver none` machine.
 
 Coworker either uses `docker-env`, or you could just send the commands printed by `--export`
 
+    [[ $fqdn ]] || read -p 'Enter fqdn: ' fqdn
+    [[ $external_ip ]] || read -p 'Enter external_ip: ' external_ip
+
+    docker-env --activate external -y
+    docker-machine create --driver generic --generic-ip-address $external_ip --generic-ssh-user $ssh-user $fqdn
+    docker-env --export
+
+

@@ -218,7 +218,7 @@ If you intentionally want to do that, please use \`docker-machine create\`"
                 [[ ! -f $MACHINE_STORAGE_PATH/certs/ca-key.pem ]] && echo No authority found && return 1
                 [[ -f $env_name.tgz ]] && echo File $env_name.tgz exists && return 1
                 tar -cvzf $env_name.tgz -C $MACHINE_STORAGE_PATH/certs --exclude .DS_Store --exclude ca-key.pem .
-                __docker-env__help_export $env_name
+                [[ $quiet == 1 ]] || __docker-env__help_export $env_name
                 return
                 ;;
             --export-ca)
