@@ -274,11 +274,14 @@ docker-env(){
             --ls|-l)
                 paste <(ls $DOCKER_ENV_MACHINE_PATH) <(\
                  for d in `ls -d -1 $DOCKER_ENV_MACHINE_PATH/**`; do
-                    [[ ! -d $d/certs ]] && echo " (empty)";
-                    if [[ -f $d/certs/ca-key.pem ]]; then
+                    if [[ ! -d $d/certs ]]; then
+                     echo " (none)"
+                    elif [[ -f $d/certs/ca-key.pem ]]; then
                      echo " (ca)"
                     elif [[ -f $d/certs/ca.pem ]]; then
                      echo " (noca)"
+                    else
+                     echo " (empty)"
                     fi
                  done)|column -t
                  return
