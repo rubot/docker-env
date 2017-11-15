@@ -86,11 +86,8 @@ Coworkers either use `docker-env`, or you could just send the commands printed b
 
 Create the generic machine:
 
-    [[ $fqdn ]] || read -p 'Enter fqdn: ' fqdn
-    [[ $external_ip ]] || read -p 'Enter external_ip: ' external_ip
-
     docker-env --activate external -y
-    docker-machine create --driver generic --generic-ip-address $external_ip --generic-ssh-user $ssh-user $fqdn
+    docker-machine create --driver generic --generic-ip-address $ip --generic-ssh-user $ssh-user $fqdn
     docker-env --export
 
 
