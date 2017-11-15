@@ -27,8 +27,9 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                                       like: eval "$(docker-machine env name)" does
 ## Usage example
 
-    echo source docker-env.bash >> ~/.bashrc
-    exec $SHELL
+    wget https://raw.githubusercontent.com/rubot/docker-env/master/docker-env.bash
+    source docker-env.bash
+    
 
     docker-env --activate env-ca -y  # Create a directory ~/.docker/docker_env/env-ca
                                      # And point `MACHINE_STORAGE_PATH` to it
