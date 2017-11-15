@@ -80,10 +80,13 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                                                       #  open ~/.docker/docker_env/env-none/certs/ca-key.pem: 
                                                       #    no such file or directory
 
-Now you could create a CA for an `--driver generic` machine for coworking, export and send the certificates for coworkers.
-Coworker then import the certificates and create a `--driver none` machine.
+## Create a machine for coworking
 
-Coworker either uses `docker-env`, or you could just send the commands printed by `--export`
+Now you could create a `--driver generic` CA-machine for coworking. Then export and send the certificates to coworkers.
+Coworkers then import the certificates and create a `--driver none` machine.
+Coworkers either use `docker-env`, or you could just send the commands printed by `--export`
+
+Create the generic machine:
 
     [[ $fqdn ]] || read -p 'Enter fqdn: ' fqdn
     [[ $external_ip ]] || read -p 'Enter external_ip: ' external_ip
