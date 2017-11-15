@@ -8,7 +8,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     Usage: docker-env [option|docker-machine_name]
 
     Options:
-        --activate [name] [--yes|-y]           export MACHINE_STORAGE_PATH=/Users/rubot/.docker/docker_env/name. Create when it does not exist
+        --activate [name] [--yes|-y]           export MACHINE_STORAGE_PATH=~/.docker/docker_env/name. Create when it does not exist
         --create-machine [ip] [name]           docker-machine create --driver none
         --deactivate                           unset MACHINE_STORAGE_PATH
         --docker-machine-ls                    docker-machine ls
@@ -17,7 +17,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
         --import [name.tgz]                    import tgz to current env
         --ls|-l                                list all environments
         --off                                  --unset + --deactivate
-        --open|-o                              open /Users/rubot/.docker in Finder
+        --open|-o                              open ~/.docker in Finder
         --remote                               set DOCKER_REMOTE=1
         --show-env                             grep current env vars
         --unset|-u                             unset DOCKER_HOST env vars
