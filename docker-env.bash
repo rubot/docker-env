@@ -160,9 +160,8 @@ If you intentionally want to do that, please use \`docker-machine create\`"
 
                 if [[ ! -d $DOCKER_ENV_MACHINE_PATH/$env_name ]]; then
                     case ${params[@]:2:2} in
-                        -y|--yes)
+                        --yes|-y)
                             mkdir -p $DOCKER_ENV_MACHINE_PATH/$env_name
-                            break
                             ;;
                         *)
                             if [[ ${params[@]:2:2} ]]; then
