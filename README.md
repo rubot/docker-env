@@ -8,7 +8,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     Usage: docker-env [option|docker-machine_name]
 
     Options:
-        --activate [name]             export MACHINE_STORAGE_PATH=/Users/rubot/.docker/docker_env/name
+        --activate [name]             export MACHINE_STORAGE_PATH=~/.docker/docker_env/name
         --create-machine [ip] [name]  docker-machine create --driver none
         --deactivate                  unset MACHINE_STORAGE_PATH
         --docker-machine-ls           docker-machine ls
@@ -18,7 +18,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
         --help                        this text
         --ls|-l                       list all environments
         --off                         --unset + --deactivate
-        --open|-o                     open /Users/rubot/.docker in Finder
+        --open|-o                     open ~/.docker in Finder
         --quiet|-q                    No output when relevant
         --remote                      set DOCKER_REMOTE=1
         --show-env                    grep current env vars
