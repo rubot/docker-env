@@ -212,8 +212,8 @@ If you intentionally want to do that, please use \`docker-machine create\`"
                 env_name=`basename $MACHINE_STORAGE_PATH`
                 [[ ! -d $MACHINE_STORAGE_PATH/certs ]] && echo Directory $MACHINE_STORAGE_PATH/certs does not exists, yet && return 1
                 [[ ! -f $MACHINE_STORAGE_PATH/certs/ca-key.pem ]] && echo No authority found && return 1
-                [[ -f $env_name-ca.tgz ]] && echo File $env_name-ca.tgz exists && return 1
-                tar -cvzf $env_name.tgz -C $MACHINE_STORAGE_PATH/certs --exclude .DS_Store .
+                [[ -f $env_name.ca.tgz ]] && echo File $env_name.ca.tgz exists && return 1
+                tar -cvzf $env_name.ca.tgz -C $MACHINE_STORAGE_PATH/certs --exclude .DS_Store .
                 return
                 ;;
             --import)
