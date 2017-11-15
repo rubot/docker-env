@@ -80,9 +80,11 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
 
 ## Create a machine for coworking
 
-Now you could create a `--driver generic` CA-machine for coworking. Then export and send the certificates to coworkers.
+Now you could `docker-machine create --driver generic` the CA-machine for coworking. 
+Then you export and send the certificates to coworkers.
 Coworkers then import the certificates and create a `--driver none` machine.
-Coworkers either use `docker-env --import/docker-env --create-machine`, or you could just send the commands printed by `--export`
+They either use `docker-env --import` and `docker-env --create-machine`, or you could 
+just send the commands printed by `docker-env --export`
 
 Create the generic machine:
 
