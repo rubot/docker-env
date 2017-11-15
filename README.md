@@ -1,31 +1,31 @@
 # docker-env
 
 Basically this just exports `MACHINE_STORAGE_PATH` which is used by docker-machine.
-If you ever had the same known problem dealing with docker-machine/docker and certificates, this is how I handle it:
+If you ever had the same known problem, dealing with docker-machine/docker and certificates, this is how I handle it.
 
-Maintains docker-machine environments
+    Maintains docker-machine environments
 
-Usage: docker-env [option|docker-machine_name]
+    Usage: docker-env [option|docker-machine_name]
 
-Options:
-    --activate [name]             export MACHINE_STORAGE_PATH=/Users/rubot/.docker/docker_env/name
-    --create-machine [ip] [name]  docker-machine create --driver none
-    --deactivate                  unset MACHINE_STORAGE_PATH
-    --docker-machine-ls           docker-machine ls
-    --export                      export cert-files to tgz
-    --export-ca                   export ca-private-key and cert-files to tgz
-    --import [name.tgz]           import tgz to current env
-    --help                        this text
-    --ls|-l                       list all environments
-    --off                         --unset + --deactivate
-    --open|-o                     open /Users/rubot/.docker in Finder
-    --quiet|-q                    No output when relevant
-    --remote                      set DOCKER_REMOTE=1
-    --show-env                    grep current env vars
-    --unset|-u                    unset DOCKER_HOST env vars
+    Options:
+        --activate [name]             export MACHINE_STORAGE_PATH=/Users/rubot/.docker/docker_env/name
+        --create-machine [ip] [name]  docker-machine create --driver none
+        --deactivate                  unset MACHINE_STORAGE_PATH
+        --docker-machine-ls           docker-machine ls
+        --export                      export cert-files to tgz
+        --export-ca                   export ca-private-key and cert-files to tgz
+        --import [name.tgz]           import tgz to current env
+        --help                        this text
+        --ls|-l                       list all environments
+        --off                         --unset + --deactivate
+        --open|-o                     open /Users/rubot/.docker in Finder
+        --quiet|-q                    No output when relevant
+        --remote                      set DOCKER_REMOTE=1
+        --show-env                    grep current env vars
+        --unset|-u                    unset DOCKER_HOST env vars
 
-docker-machine_name       export DOCKER_HOST env vars for docker-machine host
-                          like: eval "$(docker-machine env name)" does
+    docker-machine_name       export DOCKER_HOST env vars for docker-machine host
+                              like: eval "$(docker-machine env name)" does
 
 ## Usage example
 
