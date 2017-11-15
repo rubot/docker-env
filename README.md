@@ -77,5 +77,5 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                                                       #  Error creating machine: 
                                                       #   Error running provisioning: error 
                                                       #   generating server cert: 
-                                                      #   open ~/.docker/docker_env/env-none/certs/ca-key.pem: 
+                                                      #  open ~/.docker/docker_env/env-none/certs/ca-key.pem: 
                                                       #    no such file or directory
