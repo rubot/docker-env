@@ -3,7 +3,7 @@
 export DOCKER_ENV_DEFAULT_DOCKER_PATH=~/.docker
 export DOCKER_ENV_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env
 # Disable /etc/hosts for all ssh completions
-export COMP_KNOWN_HOSTS_WITH_HOSTFILE=
+# export COMP_KNOWN_HOSTS_WITH_HOSTFILE=
 
 # _docker_prompt () {
 #     which docker &>/dev/null || (echo "docker" && return)
@@ -303,7 +303,7 @@ If you intentionally want to do that, please use \`docker-machine create\`"
 _docker-env(){
     local cur prev configfile;
     local -a config;
-    local options="--docker-machine-ls --ls --open --unset --activate --export --help --import --create-machine --deactivate --remote --show-env --off"
+    local options="--docker-machine-ls --ls --open --unset --activate --export --export-ca --help --import --create-machine --deactivate --remote --show-env --off"
     local cas=`ls $DOCKER_ENV_MACHINE_PATH`
     local dmachines="`docker-machine ls -t 0 -q` --docker-machine-ls --help"
 
