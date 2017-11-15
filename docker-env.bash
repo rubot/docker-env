@@ -67,6 +67,24 @@ __docker-env__help(){
         echo
 }
 
+__docker-env__help_export(){
+
+    echo
+    echo "Ensure remote port \`2376\` is open and secure enough for you."
+    echo "Send \`$1.tgz\` and provide those commands: "
+    echo
+    echo "    [[ \$machine_name ]] || read -p 'Enter machine_name: ' machine_name"
+    echo "    [[ \$machine_ip ]] || read -p 'Enter machine_ip: ' machine_ip"
+    echo
+    echo "    MACHINE_STORAGE_PATH=~/.docker/docker_env/$1"
+    echo "    mkdir -p \$MACHINE_STORAGE_PATH/certs"
+    echo "    tar xvzf $1.tgz -C \$MACHINE_STORAGE_PATH/certs"
+    echo "    docker-machine create --driver none --url tcp://\$machine_ip:2376 \$machine_name"
+    echo "    cp -a \$MACHINE_STORAGE_PATH/certs/*.pem \$MACHINE_STORAGE_PATH/machines/\$machine_name/"
+    echo "    eval \"\$(docker-machine env \$machine_name)\""
+
+}
+
 docker-env(){
     local param
     local quiet
@@ -200,6 +218,7 @@ If you intentionally want to do that, please use \`docker-machine create\`"
                 [[ ! -f $MACHINE_STORAGE_PATH/certs/ca-key.pem ]] && echo No authority found && return 1
                 [[ -f $env_name.tgz ]] && echo File $env_name.tgz exists && return 1
                 tar -cvzf $env_name.tgz -C $MACHINE_STORAGE_PATH/certs --exclude .DS_Store --exclude ca-key.pem .
+                __docker-env__help_export $env_name
                 return
                 ;;
             --export-ca)

@@ -79,3 +79,9 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                                                       #   generating server cert: 
                                                       #  open ~/.docker/docker_env/env-none/certs/ca-key.pem: 
                                                       #    no such file or directory
+
+Now you could create a CA for an `--driver generic` machine for coworking, export and send the certificates for coworkers.
+Coworker then import the certificates and create a `--driver none` machine.
+
+Coworker either uses `docker-env`, or you could just send the commands printed by `--export`
+
