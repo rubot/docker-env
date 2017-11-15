@@ -54,16 +54,16 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                                      # keys into env-ca.tgz
                                      # getting it from ~/.docker/docker_env/env-ca/certs
 
-    docker-env --activate env-none   # Create a second environment
+    docker-env --activate env-noca   # Create a second environment
     
     docker-machine ls                # Should be empty
     
-    docker-env --import env-ca.tgz   # Extract the certificates to ~/.docker/docker_env/env-none/certs
+    docker-env --import env-ca.tgz   # Extract the certificates to ~/.docker/docker_env/env-noca/certs
     
     docker-env --create-machine $ip testmachine  # Creates a `docker-machine --driver none` machine 
                                                  #  pointing to $ip
                                                  # Copy the certificates to
-                                                 #  ~/.docker/docker_env/env-none/machines/testmachine
+                                                 #  ~/.docker/docker_env/env-noca/machines/testmachine
 
     docker-machine ls                # Should show up the machine named testmachine
 
@@ -75,7 +75,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                                                       #  Error creating machine: 
                                                       #   Error running provisioning: error 
                                                       #   generating server cert: 
-                                                      #  open ~/.docker/docker_env/env-none/certs/ca-key.pem: 
+                                                      #  open ~/.docker/docker_env/env-noca/certs/ca-key.pem: 
                                                       #    no such file or directory
 
 ## Create a machine for coworking
