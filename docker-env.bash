@@ -5,11 +5,16 @@ export DOCKER_ENV_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env
 # Disable /etc/hosts for all ssh completions
 # export COMP_KNOWN_HOSTS_WITH_HOSTFILE=
 
+
+##
+# This could be used as a security layer on prompt.
+# Check `docker-env --remote`
+##
 # _docker_prompt () {
 #     which docker &>/dev/null || (echo "docker" && return)
 #     echo ${DOCKER_HOST:-docker.sock} - ${MACHINE_STORAGE_PATH:-}  # unix:///var/run/
 # }
-
+#
 # __docker_skip() {
 #     # prevent running unwanted remote docker commands
 #     if ((BASH_SUBSHELL>0)); then
@@ -33,6 +38,8 @@ export DOCKER_ENV_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env
 # trap '__docker_skip' DEBUG
 # shopt -s extdebug
 # export PS1='[$(_docker_prompt)]\n'$PS1
+##
+
 
 __docker-env__show_vars(){
 
