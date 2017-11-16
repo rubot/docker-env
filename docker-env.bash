@@ -410,6 +410,9 @@ _docker-env(){
           --import)
             COMPREPLY=($(compgen -W "$(ls *.tgz 2>/dev/null)" -- ${cur}));
             ;;
+          --export)
+            COMPREPLY=($(compgen -W "--show --ca --noca --quiet" -- ${cur}));
+            ;;
         esac
     fi
     return 0
