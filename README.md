@@ -105,6 +105,7 @@ Use the default machine location
 
     machine_ip=change_to_ip
     machine_name=change_to_name
+
     MACHINE_STORAGE_PATH=~/.docker/machine  # Default
     MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
     MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
@@ -121,6 +122,7 @@ To every time manually export MACHINE_STORAGE_PATH
     machine_ip=change_to_ip
     machine_name=change_to_name
     env_name=myenv
+    
     MACHINE_STORAGE_PATH=~/.docker/docker_env/$env_name
     MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
     MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
