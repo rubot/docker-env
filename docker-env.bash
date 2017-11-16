@@ -46,11 +46,14 @@ __docker-env__help(){
     echo "Usage: docker-env [option|docker-machine_name]"
     echo
     echo "Options:"
-    echo "    --activate [name] [--yes|-y]           export MACHINE_STORAGE_PATH=$DOCKER_ENV_MACHINE_PATH/name. Create when it does not exist"
+    echo "    --activate [name] [--yes|-y]           export MACHINE_STORAGE_PATH=$DOCKER_ENV_MACHINE_PATH/name."
+    echo "                                           Create when it does not exist"
     echo "    --create-machine [ip] [name]           docker-machine create --driver none"
     echo "    --deactivate                           unset MACHINE_STORAGE_PATH"
     echo "    --docker-machine-ls                    docker-machine ls"
-    echo "    --export [--ca] [--noca] [--quiet|-q]  export cert-files [and ca-private-key] to tgz"
+    echo "    --export [--show] [--quiet|-q]         export cert-files to tgz. [--show] just print import infos."
+    echo "                      [--ca]               do not exclude ca-key.pem"
+    echo "                      [--noca]             although ca-key.pem exists"
     echo "    --help                                 this text"
     echo "    --import [name.tgz]                    import tgz to current env"
     echo "    --ls|-l                                list all environments"
@@ -242,9 +245,10 @@ docker-env(){
                 ;;
             --export)
                 local ca
+                local excludes
                 local name
                 local noca
-                local excludes
+                local show
 
                 __docker-env__validate_storage_path||return 1
 
@@ -252,11 +256,21 @@ docker-env(){
                     [[ $opt == '--ca' ]] && ca=".ca"
                 done
 
+                name="`basename $MACHINE_STORAGE_PATH`$ca"
+
                 for opt in ${args[@]}; do
                     [[ $opt == '--noca' ]] && noca=1
                 done
 
-                name="`basename $MACHINE_STORAGE_PATH`$ca"
+                for opt in ${args[@]}; do
+                    [[ $opt == '--show' ]] && show=1
+                done
+
+                if [[ $show == 1 ]]; then
+                    __docker-env__help_export $name
+                    return
+                fi
+
 
                 if [[ ! $noca || $ca ]]; then
                     if [[ ! -f $MACHINE_STORAGE_PATH/certs/ca-key.pem ]]; then

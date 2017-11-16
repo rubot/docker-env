@@ -8,13 +8,14 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     Usage: docker-env [option|docker-machine_name]
 
     Options:
-        --activate [name] [--yes|-y]           export MACHINE_STORAGE_PATH=~/.docker/docker_env/name
-                                                Create when it does not exist
+        --activate [name] [--yes|-y]           export MACHINE_STORAGE_PATH=~/.docker/docker_env/name.
+                                               Create when it does not exist
         --create-machine [ip] [name]           docker-machine create --driver none
         --deactivate                           unset MACHINE_STORAGE_PATH
         --docker-machine-ls                    docker-machine ls
-        --export [--ca] [--noca] [--quiet|-q]  export cert-files to tgz [--ca incl. ca-key.pem]
-                                                [--noca alhough ca-key.pem]
+        --export [--show] [--quiet|-q]         export cert-files to tgz. [--show] just print import infos.
+                          [--ca]               do not exclude ca-key.pem
+                          [--noca]             although ca-key.pem exists
         --help                                 this text
         --import [name.tgz]                    import tgz to current env
         --ls|-l                                list all environments
@@ -26,6 +27,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
 
     docker-machine_name [--quiet|-q]  export DOCKER_HOST env vars for docker-machine host
                                       like: eval "$(docker-machine env name)" does
+
 ## Usage example
 
     wget https://raw.githubusercontent.com/rubot/docker-env/master/docker-env.bash
@@ -122,7 +124,7 @@ To every time manually export MACHINE_STORAGE_PATH
     machine_ip=change_to_ip
     machine_name=change_to_name
     env_name=myenv
-    
+
     MACHINE_STORAGE_PATH=~/.docker/docker_env/$env_name
     MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
     MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
