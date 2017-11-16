@@ -96,7 +96,7 @@ Create the generic machine:
 
 ## Import machine
 
-`docker-env --export` prints following infos each time you export the certs.
+> `docker-env --export` prints following infos each time you export the certs.
 
 Ensure remote port `2376` is open and secure enough for you.
 Send `external.tgz` and provide one of the following three command options.
