@@ -78,8 +78,7 @@ __docker-env__help_export(){
     echo "    MACHINE_PATH=\$MACHINE_STORAGE_PATH/machines/\$machine_name"
     echo "    docker-machine create --driver none --url tcp://\$machine_ip:2376 \$machine_name"
     echo "    tar xvzf $1.tgz -C \$MACHINE_PATH"
-    echo "    sed -i.bak \"s/.docker\/machine\/certs/.docker\/machine\/machines\/\$machine_name/\""
-    echo "     \$MACHINE_PATH/config.json"
+    echo "    sed -i.bak \"s/.docker\/machine\/certs/.docker\/machine\/machines\/\$machine_name/\" \$MACHINE_PATH/config.json"
     echo "    eval \"\$(docker-machine env \$machine_name)\""
     echo
     echo "To every time manually export MACHINE_STORAGE_PATH:"
