@@ -32,11 +32,13 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     docker-machine_name [--quiet|-q]  export DOCKER_HOST env vars for docker-machine host
                                       like: eval "$(docker-machine env name)" does
 
+## Install
+
+    curl -so ~/.docker-env.bash https://raw.githubusercontent.com/rubot/docker-env/master/docker-env.bash
+    echo source ~/.docker-env.bash >> ~/.bashrc
+    source ~/.docker-env.bash
+
 ## Usage example
-
-    wget https://raw.githubusercontent.com/rubot/docker-env/master/docker-env.bash
-    source docker-env.bash
-
 
     docker-env --activate env -y     # Create a directory ~/.docker/docker_env/env
                                      # And point `MACHINE_STORAGE_PATH` to it
