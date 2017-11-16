@@ -279,6 +279,7 @@ docker-env(){
                 local excludes
                 local name
                 local noca
+                local q
                 local show
 
                 __docker-env__validate_storage_path||return 1
@@ -318,8 +319,11 @@ docker-env(){
                 excludes=" --exclude .DS_Store"
                 [[ ! $ca ]] && excludes+=" --exclude ca-key.pem"
 
-                tar -cvzf $name.tgz -C $MACHINE_STORAGE_PATH/certs$excludes .
-                [[ $quiet == 1 ]] || __docker-env__help_export $name
+                if [[ ! $quiet == 1 ]]; then
+                    q=v
+                    __docker-env__help_export $name
+                fi
+                tar c${q}zf $name.tgz -C $MACHINE_STORAGE_PATH/certs$excludes .
                 return
                 ;;
             --help)
@@ -343,7 +347,7 @@ docker-env(){
 
                 __docker-env__validate_storage_path create_or_fail_if_exist||return 1
 
-                if tar -tzf $tgz >/dev/null; then
+                if tar tzf $tgz &>/dev/null; then
                     tar xvzf $tgz -C $MACHINE_STORAGE_PATH/certs
                 fi
                 return
@@ -381,8 +385,8 @@ docker-env(){
                 local REGM=${MACHINE_PATH//\//\\/}
 
                 docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name||return 1
-                if tar -tzf $tgz &>/dev/null; then
-                    tar xvzf $tgz -C $MACHINE_PATH &>/dev/null
+                if tar tzf $tgz &>/dev/null; then
+                    tar xzf $tgz -C $MACHINE_PATH
                 fi
                 sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
                 echo "---"
