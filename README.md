@@ -121,6 +121,8 @@ Manually export MACHINE_STORAGE_PATH [--import --create]
     tar xvzf external.tgz -C $MACHINE_CERTS
     docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
     cp -a $MACHINE_CERTS/*.pem $MACHINE_PATH/
+
+    export MACHINE_STORAGE_PATH=~/.docker/docker_env/$env_name
     eval "$(docker-machine env $machine_name)"
 
 If docker-env is available [--import --create]
@@ -131,6 +133,7 @@ If docker-env is available [--import --create]
     docker-env --activate myenv -y
     docker-env --import external.tgz
     docker-env --create-machine $machine_ip $machine_name
+
     docker-env $machine_name
 
 Use the default machine location [--import-create]
@@ -147,6 +150,8 @@ Use the default machine location [--import-create]
     docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
     tar xvzf external.tgz -C $MACHINE_PATH
     sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
+
+    export MACHINE_STORAGE_PATH=~/.docker/machine  # Default
     eval "$(docker-machine env $machine_name)"
 
 If docker-env is available [--import-create]
@@ -156,4 +161,5 @@ If docker-env is available [--import-create]
 
     docker-env --activate default
     docker-env --import-create external.tgz $machine_ip $machine_name
+
     docker-env $machine_name
