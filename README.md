@@ -107,23 +107,7 @@ Ensure remote port `2376` is open and secure enough for you.
 Send `external.tgz` and point to the docs: [import-machine](https://github.com/rubot/docker-env#import-machine),
 or provide one of the following four command options.
 
-Use the default machine location [--import-create]
-
-    machine_ip=change_to_ip
-    machine_name=change_to_name
-
-    MACHINE_STORAGE_PATH=~/.docker/machine  # Default
-    MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
-    MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
-    REGC=${MACHINE_CERTS//\//\\/}
-    REGM=${MACHINE_PATH//\//\\/}
-
-    docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
-    tar xvzf external.tgz -C $MACHINE_PATH
-    sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
-    eval "$(docker-machine env $machine_name)"
-
-To every time manually export MACHINE_STORAGE_PATH [--import --create]
+Manually export MACHINE_STORAGE_PATH [--import --create]
 
     machine_ip=change_to_ip
     machine_name=change_to_name
@@ -148,6 +132,22 @@ If docker-env is available [--import --create]
     docker-env --import external.tgz
     docker-env --create-machine $machine_ip $machine_name
     docker-env $machine_name
+
+Use the default machine location [--import-create]
+
+    machine_ip=change_to_ip
+    machine_name=change_to_name
+
+    MACHINE_STORAGE_PATH=~/.docker/machine  # Default
+    MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
+    MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
+    REGC=${MACHINE_CERTS//\//\\/}
+    REGM=${MACHINE_PATH//\//\\/}
+
+    docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
+    tar xvzf external.tgz -C $MACHINE_PATH
+    sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
+    eval "$(docker-machine env $machine_name)"
 
 If docker-env is available [--import-create]
 
