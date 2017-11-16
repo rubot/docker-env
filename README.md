@@ -99,9 +99,9 @@ Create the generic machine:
 `docker-env --export` prints following infos each time you export the certs.
 
 Ensure remote port `2376` is open and secure enough for you.
-Send `external.tgz` and provide those commands:
+Send `external.tgz` and provide one of following three command options.
 
-Just use the default machine location:
+1. Just use the default machine location
 
     machine_ip=change_to_ip
     machine_name=change_to_name
@@ -112,7 +112,7 @@ Just use the default machine location:
     sed -i.bak "s/.docker\/machine\/certs/.docker\/machine\/machines\/$machine_name/" $MACHINE_PATH/config.json
     eval "$(docker-machine env $machine_name)"
 
-To every time manually export MACHINE_STORAGE_PATH:
+2. To every time manually export MACHINE_STORAGE_PATH
 
     machine_ip=change_to_ip
     machine_name=change_to_name
@@ -123,7 +123,7 @@ To every time manually export MACHINE_STORAGE_PATH:
     cp -a $MACHINE_STORAGE_PATH/certs/*.pem $MACHINE_STORAGE_PATH/machines/$machine_name/
     eval "$(docker-machine env $machine_name)"
 
-If docker-env is available:
+3. If docker-env is available
 
     machine_ip=change_to_ip
     machine_name=change_to_name
