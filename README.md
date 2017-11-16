@@ -115,7 +115,7 @@ Use the default machine location
     REGM=${MACHINE_PATH//\//\\/}
 
     docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
-    tar xvzf webrunners.tgz -C $MACHINE_PATH
+    tar xvzf external.tgz -C $MACHINE_PATH
     sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
     eval "$(docker-machine env $machine_name)"
 
@@ -129,7 +129,7 @@ To every time manually export MACHINE_STORAGE_PATH
     MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
 
     mkdir -p $MACHINE_CERTS
-    tar xvzf webrunners.tgz -C $MACHINE_CERTS
+    tar xvzf external.tgz -C $MACHINE_CERTS
     docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
     cp -a $MACHINE_CERTS/*.pem $MACHINE_PATH/
     eval "$(docker-machine env $machine_name)"
@@ -140,6 +140,6 @@ If docker-env is available
     machine_name=change_to_name
 
     docker-env --activate myenv -y
-    docker-env --import webrunners.tgz
+    docker-env --import external.tgz
     docker-env --create-machine $machine_ip $machine_name
     docker-env $machine_name
