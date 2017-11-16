@@ -146,7 +146,7 @@ __docker-env__create_machine(){
 
     __docker-env__validate_storage_path "Run \`docker-env --import\` first, otherwise we would create a new CA now.\nIf you intentionally want to do that, please use \`docker-machine create\`"||return 1
 
-    docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name 1>/dev/null||return 1
+    docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name||return 1
     cp -a `find $MACHINE_STORAGE_PATH/certs -type f|grep -v ca-key` $MACHINE_STORAGE_PATH/machines/$machine_name/||return 1
     echo "---"
     echo "Done. You could use docker-machine now for specific commands."
@@ -390,6 +390,7 @@ docker-env(){
                     tar xvzf $tgz -C $MACHINE_PATH
                 fi
                 sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
+                echo
                 echo "Done. You could use docker-machine now for specific commands."
                 echo "---"
                 echo "Run this command to configure your shell: docker-env $machine_name"
