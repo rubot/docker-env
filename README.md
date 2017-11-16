@@ -18,6 +18,9 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                           [--noca]             although ca-key.pem exists
         --help                                 this text
         --import [name.tgz]                    import tgz to current env
+                                               This puts certs to cert folder
+        --import-create [name.tgz] [ip] [name] import tgz to current env and create machine
+                                               This puts certs in machine folder
         --ls|-l                                list all environments
         --off                                  --unset + --deactivate
         --open|-o                              open ~/.docker in Finder
@@ -104,7 +107,7 @@ Ensure remote port `2376` is open and secure enough for you.
 Send `external.tgz` and point to the docs: [import-machine](https://github.com/rubot/docker-env#import-machine),
 or provide one of the following three command options.
 
-Use the default machine location
+Use the default machine location [--import-create]
 
     machine_ip=change_to_ip
     machine_name=change_to_name
@@ -120,7 +123,7 @@ Use the default machine location
     sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
     eval "$(docker-machine env $machine_name)"
 
-To every time manually export MACHINE_STORAGE_PATH
+To every time manually export MACHINE_STORAGE_PATH [--import --create]
 
     machine_ip=change_to_ip
     machine_name=change_to_name

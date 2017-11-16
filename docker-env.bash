@@ -1,6 +1,7 @@
 
 
 export DOCKER_ENV_DEFAULT_DOCKER_PATH=~/.docker
+export DOCKER_ENV_DEFAULT_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/machine
 export DOCKER_ENV_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env
 # Disable /etc/hosts for all ssh completions
 # export COMP_KNOWN_HOSTS_WITH_HOSTFILE=
@@ -56,6 +57,9 @@ __docker-env__help(){
     echo "                      [--noca]             although ca-key.pem exists"
     echo "    --help                                 this text"
     echo "    --import [name.tgz]                    import tgz to current env"
+    echo "                                           This puts certs to cert folder"
+    echo "    --import-create [name.tgz] [ip] [name] import tgz to current env and create machine"
+    echo "                                           This puts certs in machine folder"
     echo "    --ls|-l                                list all environments"
     echo "    --off                                  --unset + --deactivate"
     echo "    --open|-o                              open $DOCKER_ENV_DEFAULT_DOCKER_PATH in Finder"
@@ -75,7 +79,7 @@ __docker-env__help_export(){
     echo "Send \`$1.tgz\` and point to the docs: [import-machine](https://github.com/rubot/docker-env#import-machine),"
     echo "or provide one of the following three command options."
     echo
-    echo "1. Use the default machine location"
+    echo "1. Use the default machine location [--import-create]"
     echo
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"
@@ -91,7 +95,7 @@ __docker-env__help_export(){
     echo "    sed -i.bak \"s/\${REGC}/\${REGM}/\" \$MACHINE_PATH/config.json"
     echo "    eval \"\$(docker-machine env \$machine_name)\""
     echo
-    echo "2. To every time manually export MACHINE_STORAGE_PATH"
+    echo "2. To every time manually export MACHINE_STORAGE_PATH [--import --create]"
     echo
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"
@@ -150,6 +154,10 @@ __docker-env__validate_storage_path(){
         return 1
     fi
 
+    if [[ $1 == storage_only ]]; then
+        return
+    fi
+
     if [[ $1 == create_or_fail_if_exist ]]; then
         [[ -d $MACHINE_STORAGE_PATH/certs ]] && echo Directory $MACHINE_STORAGE_PATH/certs exists. && return 1
         mkdir -p $MACHINE_STORAGE_PATH/certs
@@ -195,6 +203,14 @@ docker-env(){
             --activate)
                 local create
                 local name=$optarg
+
+                if [[ $name == default ]]; then
+
+                    eval "$(docker-machine env -u)"
+                    unset DOCKER_REMOTE
+                    export MACHINE_STORAGE_PATH=$DOCKER_ENV_DEFAULT_MACHINE_PATH
+                    return
+                fi
 
                 if [[ ! $name || $name == -* ]]; then
                     echo "Name for environment is missing"
@@ -318,6 +334,49 @@ docker-env(){
                 fi
                 return
                 ;;
+            --import-create)
+                local machine_ip=$optarg_2
+                local machine_name=${args[$((i+2))]}
+                local tgz=$optarg
+
+                if [[ ! $tgz ]]; then
+                    echo "Filename missing"
+                    return 1
+                fi
+
+                if [[ ! -f $tgz ]]; then
+                    echo "Not a file: $tgz"
+                    return 1
+                fi
+
+                if [[ ! $machine_ip || $machine_ip == -* ]]; then
+                    echo "IP is missing"
+                    return 1
+                fi
+
+                if [[ ! $machine_name || $machine_name == -* ]]; then
+                    echo "Name is missing"
+                    return 1
+                fi
+
+                __docker-env__validate_storage_path storage_only||return 1
+
+                local MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
+                local MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
+                local REGC=${MACHINE_CERTS//\//\\/}
+                local REGM=${MACHINE_PATH//\//\\/}
+
+                docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name||return 1
+                if tar -tzf $tgz &>/dev/null; then
+                    tar xvzf $tgz -C $MACHINE_PATH &>/dev/null
+                fi
+                sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
+                echo "---"
+                echo "Done. You could use docker-machine now for specific commands."
+                echo "---"
+                echo "Run this command to configure your shell: docker-env $machine_name"
+                return
+                ;;
             --ls|-l)
                 paste <(ls $DOCKER_ENV_MACHINE_PATH) <(\
                  for d in `ls -d -1 $DOCKER_ENV_MACHINE_PATH/**`; do
@@ -388,10 +447,10 @@ docker-env(){
 }
 
 _docker-env(){
-    local cas=`ls $DOCKER_ENV_MACHINE_PATH`
+    local cas="`ls $DOCKER_ENV_MACHINE_PATH` default"
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local dmachines="`docker-machine ls -t 0 -q` --docker-machine-ls --help"
-    local options="--docker-machine-ls --ls --open --unset --activate --export --help --import --create-machine --deactivate --remote --show-env --off"
+    local options="--docker-machine-ls --ls --open --unset --activate --export --help --import --import-create --create-machine --deactivate --remote --show-env --off"
     local prev="${COMP_WORDS[COMP_CWORD-1]}"
 
     if [ $COMP_CWORD == 1 ]; then
@@ -408,7 +467,7 @@ _docker-env(){
           --activate)
             COMPREPLY=($(compgen -W "$cas" -- ${cur}));
             ;;
-          --import)
+          --import|--import-create)
             COMPREPLY=($(compgen -W "$(ls *.tgz 2>/dev/null)" -- ${cur}));
             ;;
           --export)
