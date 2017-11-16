@@ -71,6 +71,20 @@ __docker-env__help_export(){
     echo "Ensure remote port \`2376\` is open and secure enough for you."
     echo "Send \`$1.tgz\` and provide those commands: "
     echo
+    echo "Just use the default machine location:"
+    echo "    machine_ip=change_to_ip"
+    echo "    machine_name=change_to_name"
+    echo "    MACHINE_STORAGE_PATH=~/.docker/machine  # Default"
+    echo "    MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name"
+    echo "    docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name"
+    echo "    tar xvzf $1.tgz -C $MACHINE_PATH"
+    echo "    sed -i.bak \"s/.docker\/machine\/certs/.docker\/machine\/machines\/$machine_name/\""
+    echo "     $MACHINE_PATH/config.json"
+    echo "    eval \"$(docker-machine env $machine_name)\""
+    echo
+    echo "To every time manually export MACHINE_STORAGE_PATH:"
+    echo "    machine_ip=change_to_ip"
+    echo "    machine_name=change_to_name"
     echo "    MACHINE_STORAGE_PATH=~/.docker/docker_env/$1"
     echo "    mkdir -p \$MACHINE_STORAGE_PATH/certs"
     echo "    tar xvzf $1.tgz -C \$MACHINE_STORAGE_PATH/certs"
@@ -79,8 +93,12 @@ __docker-env__help_export(){
     echo "    eval \"\$(docker-machine env \$machine_name)\""
     echo
     echo "If docker-env is available:"
+    echo "    machine_ip=change_to_ip"
+    echo "    machine_name=change_to_name"
+    echo "    docker-env --activate myenv -y"
     echo "    docker-env --import $1.tgz"
     echo "    docker-env --create-machine \$machine_ip \$machine_name"
+    echo "    docker-env \$machine_name"
     echo
     echo -n "Exported: $1.tgz"
     [[ ! -f $MACHINE_STORAGE_PATH/certs/ca-key.pem ]] && echo " (noca)"
