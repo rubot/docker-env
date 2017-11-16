@@ -385,11 +385,11 @@ docker-env(){
                 local REGM=${MACHINE_PATH//\//\\/}
 
                 docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name||return 1
+                echo "---"
                 if tar tzf $tgz &>/dev/null; then
-                    tar xzf $tgz -C $MACHINE_PATH
+                    tar xvzf $tgz -C $MACHINE_PATH
                 fi
                 sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
-                echo "---"
                 echo "Done. You could use docker-machine now for specific commands."
                 echo "---"
                 echo "Run this command to configure your shell: docker-env $machine_name"
