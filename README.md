@@ -9,11 +9,12 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
 
     Options:
         --activate [name] [--yes|-y]           export MACHINE_STORAGE_PATH=~/.docker/docker_env/name
-                                               Create when it does not exist
+                                                Create when it does not exist
         --create-machine [ip] [name]           docker-machine create --driver none
         --deactivate                           unset MACHINE_STORAGE_PATH
         --docker-machine-ls                    docker-machine ls
-        --export [--ca] [--noca] [--quiet|-q]  export cert-files [and ca-private-key] to tgz
+        --export [--ca] [--noca] [--quiet|-q]  export cert-files to tgz 
+                                                [--ca incl. ca-key.pem] [--noca alhough ca-key.pem]
         --help                                 this text
         --import [name.tgz]                    import tgz to current env
         --ls|-l                                list all environments
@@ -29,18 +30,18 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
 
     wget https://raw.githubusercontent.com/rubot/docker-env/master/docker-env.bash
     source docker-env.bash
-    
 
-    docker-env --activate env-ca -y  # Create a directory ~/.docker/docker_env/env-ca
+
+    docker-env --activate env -y  # Create a directory ~/.docker/docker_env/env
                                      # And point `MACHINE_STORAGE_PATH` to it
 
     docker-machine ls                # Should be empty
 
     docker-machine create -d virtualbox default  # Create a local CA (Certificate Authority) and client 
                                                  # certificates into:
-                                                 #  ~/.docker/docker_env/env-ca/certs
+                                                 #  ~/.docker/docker_env/env/certs
                                                  # Create a docker virtualbox machine called `default` into
-                                                 #  ~/.docker/docker_env/env-ca/machines/default
+                                                 #  ~/.docker/docker_env/env/machines/default
                                                  # scp the certificates to the virtualbox machine
 
     docker-machine ls                # Should show up the machine named default
@@ -52,19 +53,19 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     ip=`docker-machine ip default`   # Get the ip for later
 
     docker-env --export              # exports the public CA key and the user private/public 
-                                     # keys into env-ca.tgz
-                                     # getting it from ~/.docker/docker_env/env-ca/certs
+                                     # keys into env.tgz
+                                     # getting it from ~/.docker/docker_env/env/certs
 
-    docker-env --activate env-noca   # Create a second environment
+    docker-env --activate noca   # Create a second environment
     
     docker-machine ls                # Should be empty
     
-    docker-env --import env-ca.tgz   # Extract the certificates to ~/.docker/docker_env/env-noca/certs
+    docker-env --import env.tgz   # Extract the certificates to ~/.docker/docker_env/noca/certs
     
     docker-env --create-machine $ip testmachine  # Creates a `docker-machine --driver none` machine 
                                                  #  pointing to $ip
                                                  # Copy the certificates to
-                                                 #  ~/.docker/docker_env/env-noca/machines/testmachine
+                                                 #  ~/.docker/docker_env/noca/machines/testmachine
 
     docker-machine ls                # Should show up the machine named testmachine
 
@@ -76,7 +77,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                                                       #  Error creating machine: 
                                                       #   Error running provisioning: error 
                                                       #   generating server cert: 
-                                                      #  open ~/.docker/docker_env/env-noca/certs/ca-key.pem: 
+                                                      #  open ~/.docker/docker_env/noca/certs/ca-key.pem: 
                                                       #    no such file or directory
 
 ## Create a machine for coworking
