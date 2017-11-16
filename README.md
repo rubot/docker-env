@@ -81,8 +81,8 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
 
     docker-machine create -d virtualbox testmachine2  # Will fail, as we don´t have a valid CA:
                                                       #  Error creating machine: 
-                                                      #Error running provisioning: error 
-                                                      #generating server cert: 
+                                                      # Error running provisioning: error 
+                                                      # generating server cert: 
                                                       #  open ~/.docker/docker_env/noca/certs/ca-key.pem: 
                                                       # no such file or directory
 
