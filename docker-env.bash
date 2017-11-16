@@ -93,6 +93,8 @@ __docker-env__help_export(){
     echo "    tar xvzf $1.tgz -C \$MACHINE_CERTS"
     echo "    docker-machine create --driver none --url tcp://\$machine_ip:2376 \$machine_name"
     echo "    cp -a \$MACHINE_CERTS/*.pem \$MACHINE_PATH/"
+    echo
+    echo "    export MACHINE_STORAGE_PATH=~/.docker/docker_env/\$env_name"
     echo "    eval \"\$(docker-machine env \$machine_name)\""
     echo
     echo "2. If docker-env is available [--import --create]"
@@ -103,6 +105,7 @@ __docker-env__help_export(){
     echo "    docker-env --activate myenv -y"
     echo "    docker-env --import $1.tgz"
     echo "    docker-env --create-machine \$machine_ip \$machine_name"
+    echo
     echo "    docker-env \$machine_name"
     echo
     echo "3. Use the default machine location [--import-create]"
@@ -119,6 +122,8 @@ __docker-env__help_export(){
     echo "    docker-machine create --driver none --url tcp://\$machine_ip:2376 \$machine_name"
     echo "    tar xvzf $1.tgz -C \$MACHINE_PATH"
     echo "    sed -i.bak \"s/\${REGC}/\${REGM}/\" \$MACHINE_PATH/config.json"
+    echo
+    echo "    export MACHINE_STORAGE_PATH=~/.docker/machine  # Default"
     echo "    eval \"\$(docker-machine env \$machine_name)\""
     echo
     echo "4. If docker-env is available [--import-create]"
@@ -128,6 +133,7 @@ __docker-env__help_export(){
     echo
     echo "    docker-env --activate default"
     echo "    docker-env --import-create $1.tgz \$machine_ip \$machine_name"
+    echo
     echo "    docker-env \$machine_name"
     echo
     echo -n "Exported: $1.tgz"
