@@ -69,9 +69,10 @@ __docker-env__help(){
 __docker-env__help_export(){
     echo
     echo "Ensure remote port \`2376\` is open and secure enough for you."
-    echo "Send \`$1.tgz\` and provide those commands: "
+    echo "Send \`$1.tgz\` and provide one of following three command options."
     echo
-    echo "Just use the default machine location:"
+    echo "1. Just use the default machine location"
+    echo
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"
     echo "    MACHINE_STORAGE_PATH=~/.docker/machine  # Default"
@@ -81,7 +82,8 @@ __docker-env__help_export(){
     echo "    sed -i.bak \"s/.docker\/machine\/certs/.docker\/machine\/machines\/\$machine_name/\" \$MACHINE_PATH/config.json"
     echo "    eval \"\$(docker-machine env \$machine_name)\""
     echo
-    echo "To every time manually export MACHINE_STORAGE_PATH:"
+    echo "2. To every time manually export MACHINE_STORAGE_PATH"
+    echo
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"
     echo "    MACHINE_STORAGE_PATH=~/.docker/docker_env/$1"
@@ -91,7 +93,8 @@ __docker-env__help_export(){
     echo "    cp -a \$MACHINE_STORAGE_PATH/certs/*.pem \$MACHINE_STORAGE_PATH/machines/\$machine_name/"
     echo "    eval \"\$(docker-machine env \$machine_name)\""
     echo
-    echo "If docker-env is available:"
+    echo "3. If docker-env is available"
+    echo
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"
     echo "    docker-env --activate myenv -y"
