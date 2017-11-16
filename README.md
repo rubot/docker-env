@@ -101,6 +101,9 @@ Create the generic machine:
 Ensure remote port `2376` is open and secure enough for you.
 Send `external.tgz` and provide one of the following three command options.
 
+Ensure remote port `2376` is open and secure enough for you.
+Send `webrunners.tgz` and provide one of the following three command options.
+
 Just use the default machine location
 
     machine_ip=change_to_ip
@@ -108,11 +111,11 @@ Just use the default machine location
     MACHINE_STORAGE_PATH=~/.docker/machine  # Default
     MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
     MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
-    REGC=${MACHINE_CERTS//\//\\\/}
-    REGM=${MACHINE_PATH//\//\\\/}
+    REGC=${MACHINE_CERTS//\//\\/}
+    REGM=${MACHINE_PATH//\//\\/}
 
     docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
-    tar xvzf external.tgz -C $MACHINE_PATH
+    tar xvzf webrunners.tgz -C $MACHINE_PATH
     sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
     eval "$(docker-machine env $machine_name)"
 
@@ -120,12 +123,13 @@ To every time manually export MACHINE_STORAGE_PATH
 
     machine_ip=change_to_ip
     machine_name=change_to_name
-    MACHINE_STORAGE_PATH=~/.docker/docker_env/external
+    env_name=myenv
+    MACHINE_STORAGE_PATH=~/.docker/docker_env/$env_name
     MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
     MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
 
     mkdir -p $MACHINE_CERTS
-    tar xvzf external.tgz -C $MACHINE_CERTS
+    tar xvzf webrunners.tgz -C $MACHINE_CERTS
     docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
     cp -a $MACHINE_CERTS/*.pem $MACHINE_PATH/
     eval "$(docker-machine env $machine_name)"
@@ -136,6 +140,6 @@ If docker-env is available
     machine_name=change_to_name
 
     docker-env --activate myenv -y
-    docker-env --import external.tgz
+    docker-env --import webrunners.tgz
     docker-env --create-machine $machine_ip $machine_name
     docker-env $machine_name
