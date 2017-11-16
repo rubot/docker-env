@@ -347,8 +347,10 @@ docker-env(){
 
                 __docker-env__validate_storage_path create_or_fail_if_exist||return 1
 
-                if tar tzf $tgz &>/dev/null; then
+                if tar tzf $tgz 1>/dev/null; then
                     tar xvzf $tgz -C $MACHINE_STORAGE_PATH/certs
+                else
+                    return 1
                 fi
                 return
                 ;;
@@ -386,8 +388,10 @@ docker-env(){
 
                 docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name||return 1
                 echo "---"
-                if tar tzf $tgz &>/dev/null; then
+                if tar tzf $tgz 1>/dev/null; then
                     tar xvzf $tgz -C $MACHINE_PATH
+                else
+                    return 1
                 fi
                 sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
                 echo
