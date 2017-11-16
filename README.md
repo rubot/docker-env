@@ -141,7 +141,7 @@ Use the default machine location [--import-create]
     machine_ip=change_to_ip
     machine_name=change_to_name
 
-    export MACHINE_STORAGE_PATH=~/.docker/machine  # Default
+    MACHINE_STORAGE_PATH=~/.docker/machine  # Default
     MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
     MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
     REGC=${MACHINE_CERTS//\//\\/}

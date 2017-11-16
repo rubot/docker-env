@@ -113,7 +113,7 @@ __docker-env__help_export(){
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"
     echo
-    echo "    export MACHINE_STORAGE_PATH=~/.docker/machine  # Default"
+    echo "    MACHINE_STORAGE_PATH=~/.docker/machine  # Default"
     echo "    MACHINE_CERTS=\$MACHINE_STORAGE_PATH/certs"
     echo "    MACHINE_PATH=\$MACHINE_STORAGE_PATH/machines/\$machine_name"
     echo "    REGC=\${MACHINE_CERTS//\\//\\\\/}"
