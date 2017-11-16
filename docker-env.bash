@@ -86,7 +86,7 @@ __docker-env__help_export(){
     echo "    machine_name=change_to_name"
     echo "    env_name=myenv"
     echo
-    echo "    MACHINE_STORAGE_PATH=~/.docker/docker_env/\$env_name"
+    echo "    export MACHINE_STORAGE_PATH=~/.docker/docker_env/\$env_name  # --activate"
     echo "    MACHINE_CERTS=\$MACHINE_STORAGE_PATH/certs"
     echo "    MACHINE_PATH=\$MACHINE_STORAGE_PATH/machines/\$machine_name"
     echo
@@ -95,7 +95,6 @@ __docker-env__help_export(){
     echo "    docker-machine create --driver none --url tcp://\$machine_ip:2376 \$machine_name"
     echo "    cp -a \$MACHINE_CERTS/*.pem \$MACHINE_PATH/"
     echo
-    echo "    export MACHINE_STORAGE_PATH=~/.docker/docker_env/\$env_name"
     echo "    eval \"\$(docker-machine env \$machine_name)\""
     echo
     echo "2. If docker-env is available [--import --create]"
@@ -114,7 +113,7 @@ __docker-env__help_export(){
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"
     echo
-    echo "    MACHINE_STORAGE_PATH=~/.docker/machine  # Default"
+    echo "    export MACHINE_STORAGE_PATH=~/.docker/machine  # Default  # --activate"
     echo "    MACHINE_CERTS=\$MACHINE_STORAGE_PATH/certs"
     echo "    MACHINE_PATH=\$MACHINE_STORAGE_PATH/machines/\$machine_name"
     echo "    REGC=\${MACHINE_CERTS//\\//\\\\/}"
@@ -124,7 +123,6 @@ __docker-env__help_export(){
     echo "    tar xvzf $1.tgz -C \$MACHINE_PATH"
     echo "    sed -i.bak \"s/\${REGC}/\${REGM}/\" \$MACHINE_PATH/config.json"
     echo
-    echo "    export MACHINE_STORAGE_PATH=~/.docker/machine  # Default"
     echo "    eval \"\$(docker-machine env \$machine_name)\""
     echo
     echo "4. If docker-env is available [--import-create]"
