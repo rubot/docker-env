@@ -101,7 +101,7 @@ Create the generic machine:
 > `docker-env --export` prints following infos each time you export the certs.
 
 Ensure remote port `2376` is open and secure enough for you.
-Send `external.tgz`, , point them to the docs: [import-machine](https://github.com/rubot/docker-env#import-machine),
+Send `external.tgz`, point to the docs: [import-machine](https://github.com/rubot/docker-env#import-machine),
 or provide one of the following three command options.
 
 Use the default machine location
