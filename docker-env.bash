@@ -90,7 +90,8 @@ __docker-env__help_export(){
     echo
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"
-    echo "    MACHINE_STORAGE_PATH=~/.docker/docker_env/$1"
+    echo "    env_name=myenv"
+    echo "    MACHINE_STORAGE_PATH=~/.docker/docker_env/\$env_name"
     echo "    MACHINE_CERTS=\$MACHINE_STORAGE_PATH/certs"
     echo "    MACHINE_PATH=\$MACHINE_STORAGE_PATH/machines/\$machine_name"
     echo
@@ -104,6 +105,7 @@ __docker-env__help_export(){
     echo
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"
+    echo
     echo "    docker-env --activate myenv -y"
     echo "    docker-env --import $1.tgz"
     echo "    docker-env --create-machine \$machine_ip \$machine_name"
