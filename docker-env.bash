@@ -77,7 +77,7 @@ __docker-env__help_export(){
     echo
     echo "Ensure remote port \`2376\` is open and secure enough for you."
     echo "Send \`$1.tgz\` and point to the docs: [import-machine](https://github.com/rubot/docker-env#import-machine),"
-    echo "or provide one of the following three command options."
+    echo "or provide one of the following four command options."
     echo
     echo "1. Use the default machine location [--import-create]"
     echo
@@ -111,7 +111,7 @@ __docker-env__help_export(){
     echo "    cp -a \$MACHINE_CERTS/*.pem \$MACHINE_PATH/"
     echo "    eval \"\$(docker-machine env \$machine_name)\""
     echo
-    echo "3. If docker-env is available"
+    echo "3. If docker-env is available [--import --create]"
     echo
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"
@@ -119,6 +119,15 @@ __docker-env__help_export(){
     echo "    docker-env --activate myenv -y"
     echo "    docker-env --import $1.tgz"
     echo "    docker-env --create-machine \$machine_ip \$machine_name"
+    echo "    docker-env \$machine_name"
+    echo
+    echo "4. If docker-env is available [--import-create]"
+    echo
+    echo "    machine_ip=change_to_ip"
+    echo "    machine_name=change_to_name"
+    echo
+    echo "    docker-env --activate default"
+    echo "    docker-env --import-create $1.tgz \$machine_ip \$machine_name"
     echo "    docker-env \$machine_name"
     echo
     echo -n "Exported: $1.tgz"

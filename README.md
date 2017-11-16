@@ -105,7 +105,7 @@ Create the generic machine:
 
 Ensure remote port `2376` is open and secure enough for you.
 Send `external.tgz` and point to the docs: [import-machine](https://github.com/rubot/docker-env#import-machine),
-or provide one of the following three command options.
+or provide one of the following four command options.
 
 Use the default machine location [--import-create]
 
@@ -139,7 +139,7 @@ To every time manually export MACHINE_STORAGE_PATH [--import --create]
     cp -a $MACHINE_CERTS/*.pem $MACHINE_PATH/
     eval "$(docker-machine env $machine_name)"
 
-If docker-env is available
+If docker-env is available [--import --create]
 
     machine_ip=change_to_ip
     machine_name=change_to_name
@@ -147,4 +147,13 @@ If docker-env is available
     docker-env --activate myenv -y
     docker-env --import external.tgz
     docker-env --create-machine $machine_ip $machine_name
+    docker-env $machine_name
+
+If docker-env is available [--import-create]
+
+    machine_ip=change_to_ip
+    machine_name=change_to_name
+
+    docker-env --activate default
+    docker-env --import-create external.tgz $machine_ip $machine_name
     docker-env $machine_name
