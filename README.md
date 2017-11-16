@@ -106,10 +106,14 @@ Just use the default machine location
     machine_ip=change_to_ip
     machine_name=change_to_name
     MACHINE_STORAGE_PATH=~/.docker/machine  # Default
+    MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
     MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
+    REGC=${MACHINE_CERTS//\//\\\/}
+    REGM=${MACHINE_PATH//\//\\\/}
+
     docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
     tar xvzf external.tgz -C $MACHINE_PATH
-    sed -i.bak "s/.docker\/machine\/certs/.docker\/machine\/machines\/$machine_name/" $MACHINE_PATH/config.json
+    sed -i.bak "s/${REGC}/${REGM}/" $MACHINE_PATH/config.json
     eval "$(docker-machine env $machine_name)"
 
 To every time manually export MACHINE_STORAGE_PATH
@@ -117,16 +121,20 @@ To every time manually export MACHINE_STORAGE_PATH
     machine_ip=change_to_ip
     machine_name=change_to_name
     MACHINE_STORAGE_PATH=~/.docker/docker_env/external
-    mkdir -p $MACHINE_STORAGE_PATH/certs
-    tar xvzf external.tgz -C $MACHINE_STORAGE_PATH/certs
+    MACHINE_CERTS=$MACHINE_STORAGE_PATH/certs
+    MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
+
+    mkdir -p $MACHINE_CERTS
+    tar xvzf external.tgz -C $MACHINE_CERTS
     docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
-    cp -a $MACHINE_STORAGE_PATH/certs/*.pem $MACHINE_STORAGE_PATH/machines/$machine_name/
+    cp -a $MACHINE_CERTS/*.pem $MACHINE_PATH/
     eval "$(docker-machine env $machine_name)"
 
 If docker-env is available
 
     machine_ip=change_to_ip
     machine_name=change_to_name
+
     docker-env --activate myenv -y
     docker-env --import external.tgz
     docker-env --create-machine $machine_ip $machine_name
