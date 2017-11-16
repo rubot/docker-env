@@ -13,8 +13,8 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
         --create-machine [ip] [name]           docker-machine create --driver none
         --deactivate                           unset MACHINE_STORAGE_PATH
         --docker-machine-ls                    docker-machine ls
-        --export [--ca] [--noca] [--quiet|-q]  export cert-files to tgz 
-                                                [--ca incl. ca-key.pem] [--noca alhough ca-key.pem]
+        --export [--ca] [--noca] [--quiet|-q]  export cert-files to tgz [--ca incl. ca-key.pem]
+                                                [--noca alhough ca-key.pem]
         --help                                 this text
         --import [name.tgz]                    import tgz to current env
         --ls|-l                                list all environments
