@@ -32,7 +32,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     source docker-env.bash
 
 
-    docker-env --activate env -y  # Create a directory ~/.docker/docker_env/env
+    docker-env --activate env -y     # Create a directory ~/.docker/docker_env/env
                                      # And point `MACHINE_STORAGE_PATH` to it
 
     docker-machine ls                # Should be empty
@@ -56,11 +56,11 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                                      # keys into env.tgz
                                      # getting it from ~/.docker/docker_env/env/certs
 
-    docker-env --activate noca   # Create a second environment
+    docker-env --activate noca       # Create a second environment
     
     docker-machine ls                # Should be empty
     
-    docker-env --import env.tgz   # Extract the certificates to ~/.docker/docker_env/noca/certs
+    docker-env --import env.tgz      # Extract the certificates to ~/.docker/docker_env/noca/certs
     
     docker-env --create-machine $ip testmachine  # Creates a `docker-machine --driver none` machine 
                                                  #  pointing to $ip
