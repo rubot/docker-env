@@ -72,7 +72,7 @@ __docker-env__help(){
 __docker-env__help_export(){
     echo
     echo "Ensure remote port \`2376\` is open and secure enough for you."
-    echo "Send \`$1.tgz\`, point to the docs: [import-machine](https://github.com/rubot/docker-env#import-machine),"
+    echo "Send \`$1.tgz\` and point to the docs: [import-machine](https://github.com/rubot/docker-env#import-machine),"
     echo "or provide one of the following three command options."
     echo
     echo "1. Use the default machine location"
