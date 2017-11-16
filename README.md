@@ -101,9 +101,6 @@ Create the generic machine:
 Ensure remote port `2376` is open and secure enough for you.
 Send `external.tgz` and provide one of the following three command options.
 
-Ensure remote port `2376` is open and secure enough for you.
-Send `webrunners.tgz` and provide one of the following three command options.
-
 Use the default machine location
 
     machine_ip=change_to_ip
