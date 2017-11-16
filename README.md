@@ -75,10 +75,10 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
 
     docker-machine create -d virtualbox testmachine2  # Will fail, as we don´t have a valid CA:
                                                       #  Error creating machine: 
-                                                      #   Error running provisioning: error 
-                                                      #   generating server cert: 
+                                                      #Error running provisioning: error 
+                                                      #generating server cert: 
                                                       #  open ~/.docker/docker_env/noca/certs/ca-key.pem: 
-                                                      #    no such file or directory
+                                                      # no such file or directory
 
 ## Create a machine for coworking
 
@@ -94,4 +94,40 @@ Create the generic machine:
     docker-machine create --driver generic --generic-ip-address $ip --generic-ssh-user $ssh-user $fqdn
     docker-env --export
 
+## Import machine
 
+`docker-env --export` prints following infos each time you export the certs.
+
+Ensure remote port `2376` is open and secure enough for you.
+Send `external.tgz` and provide those commands:
+
+Just use the default machine location:
+
+    machine_ip=change_to_ip
+    machine_name=change_to_name
+    MACHINE_STORAGE_PATH=~/.docker/machine  # Default
+    MACHINE_PATH=$MACHINE_STORAGE_PATH/machines/$machine_name
+    docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
+    tar xvzf external.tgz -C $MACHINE_PATH
+    sed -i.bak "s/.docker\/machine\/certs/.docker\/machine\/machines\/$machine_name/" $MACHINE_PATH/config.json
+    eval "$(docker-machine env $machine_name)"
+
+To every time manually export MACHINE_STORAGE_PATH:
+
+    machine_ip=change_to_ip
+    machine_name=change_to_name
+    MACHINE_STORAGE_PATH=~/.docker/docker_env/external
+    mkdir -p $MACHINE_STORAGE_PATH/certs
+    tar xvzf external.tgz -C $MACHINE_STORAGE_PATH/certs
+    docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name
+    cp -a $MACHINE_STORAGE_PATH/certs/*.pem $MACHINE_STORAGE_PATH/machines/$machine_name/
+    eval "$(docker-machine env $machine_name)"
+
+If docker-env is available:
+
+    machine_ip=change_to_ip
+    machine_name=change_to_name
+    docker-env --activate myenv -y
+    docker-env --import external.tgz
+    docker-env --create-machine $machine_ip $machine_name
+    docker-env $machine_name
