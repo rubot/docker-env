@@ -71,7 +71,7 @@ __docker-env__help_export(){
     echo "Ensure remote port \`2376\` is open and secure enough for you."
     echo "Send \`$1.tgz\` and provide one of the following three command options."
     echo
-    echo "1. Just use the default machine location"
+    echo "1. Use the default machine location"
     echo
     echo "    machine_ip=change_to_ip"
     echo "    machine_name=change_to_name"

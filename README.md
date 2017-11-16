@@ -104,7 +104,7 @@ Send `external.tgz` and provide one of the following three command options.
 Ensure remote port `2376` is open and secure enough for you.
 Send `webrunners.tgz` and provide one of the following three command options.
 
-Just use the default machine location
+Use the default machine location
 
     machine_ip=change_to_ip
     machine_name=change_to_name
