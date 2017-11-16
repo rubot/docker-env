@@ -47,8 +47,9 @@ __docker-env__help(){
     echo "Usage: docker-env [option|docker-machine_name]"
     echo
     echo "Options:"
-    echo "    --activate [name] [--yes|-y]           export MACHINE_STORAGE_PATH=$DOCKER_ENV_MACHINE_PATH/name."
+    echo "    --activate [name|default] [--yes|-y]   export MACHINE_STORAGE_PATH=$DOCKER_ENV_MACHINE_PATH/name."
     echo "                                           Create when it does not exist"
+    echo "                                           default is $DOCKER_ENV_DEFAULT_MACHINE_PATH"
     echo "    --create-machine [ip] [name]           docker-machine create --driver none"
     echo "    --deactivate                           unset MACHINE_STORAGE_PATH"
     echo "    --docker-machine-ls                    docker-machine ls"

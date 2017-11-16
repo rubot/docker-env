@@ -8,8 +8,9 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     Usage: docker-env [option|docker-machine_name]
 
     Options:
-        --activate [name] [--yes|-y]           export MACHINE_STORAGE_PATH=~/.docker/docker_env/name.
+        --activate [name|default] [--yes|-y]   export MACHINE_STORAGE_PATH=~/.docker/docker_env/name.
                                                Create when it does not exist
+                                               default is ~/.docker/machine
         --create-machine [ip] [name]           docker-machine create --driver none
         --deactivate                           unset MACHINE_STORAGE_PATH
         --docker-machine-ls                    docker-machine ls
