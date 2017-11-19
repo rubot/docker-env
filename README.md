@@ -1,7 +1,7 @@
 # docker-env
 
 Basically this just exports `MACHINE_STORAGE_PATH` which is used by [docker-machine](https://docs.docker.com/machine/install-machine/).
-If you ever had the same known problem, dealing with docker-machine/docker and certificates, this is how I handle it.
+If you ever had the same known problem, dealing with docker-machine/docker and certificates like described in [docker/machine/issues/1799](https://github.com/docker/machine/issues/1799) or [docker/machine/issues/2229](https://github.com/docker/machine/issues/2229), this is how I handle it.
 
     Maintains docker-machine environments
 
