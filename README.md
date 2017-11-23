@@ -8,10 +8,13 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     Usage: docker-env [option|docker-machine_name]
 
     Options:
-        --activate [name|default] [--yes|-y]   export MACHINE_STORAGE_PATH=~/.docker/docker_env/name.
+        --activate [name|default] [--yes|-y]   export MACHINE_STORAGE_PATH=/Users/rubot/.docker/docker_env/name.
                                                Create when it does not exist
-                                               default is ~/.docker/machine
+                                               default is /Users/rubot/.docker/machine
         --create-machine [ip] [name]           docker-machine create --driver none
+        --create-machine-generic [ip]          docker-machine create --driver generic
+                                 [ssh_user_name]
+                                 [name]
         --deactivate                           unset MACHINE_STORAGE_PATH
         --docker-machine-ls                    docker-machine ls
         --export [--show] [--quiet|-q]         export cert-files to tgz. [--show] just print import infos.
@@ -24,14 +27,15 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                                                This puts certs in machine folder
         --ls|-l                                list all environments
         --off                                  --unset + --deactivate
-        --open|-o                              open ~/.docker in Finder
+        --open|-o                              open /Users/rubot/.docker in Finder
+        --ps                                   docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}"
         --remote                               set DOCKER_REMOTE=1
         --show-env                             grep current env vars
         --unset|-u                             unset DOCKER_HOST env vars
 
     docker-machine_name [--quiet|-q]  export DOCKER_HOST env vars for docker-machine host
                                       like: eval "$(docker-machine env name)" does
-
+                                      
 ## Install
 
     curl -so ~/.docker-env.bash https://raw.githubusercontent.com/rubot/docker-env/master/docker-env.bash
