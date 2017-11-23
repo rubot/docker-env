@@ -8,9 +8,9 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
     Usage: docker-env [option|docker-machine_name]
 
     Options:
-        --activate [name|default] [--yes|-y]   export MACHINE_STORAGE_PATH=/.docker/docker_env/name.
+        --activate [name|default] [--yes|-y]   export MACHINE_STORAGE_PATH=~/.docker/docker_env/name.
                                                Create when it does not exist
-                                               default is /.docker/machine
+                                               default is ~/.docker/machine
         --create-machine [ip] [name]           docker-machine create --driver none
         --create-machine-generic [ip]          docker-machine create --driver generic
                                  [ssh_user_name]
@@ -27,7 +27,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
                                                This puts certs in machine folder
         --ls|-l                                list all environments
         --off                                  --unset + --deactivate
-        --open|-o                              open /.docker in Finder
+        --open|-o                              open ~/.docker in Finder
         --ps                                   docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}"
         --remote                               export DOCKER_REMOTE=1
         --show-env                             grep current env vars
