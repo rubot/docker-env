@@ -3,6 +3,8 @@
 export DOCKER_ENV_DEFAULT_DOCKER_PATH=~/.docker
 export DOCKER_ENV_DEFAULT_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/machine
 export DOCKER_ENV_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env
+export DOCKER_PS_TABLE="table {{.ID}}\t{{.Names}}\t{{.Ports}}"
+
 # Disable /etc/hosts for all ssh completions
 # export COMP_KNOWN_HOSTS_WITH_HOSTFILE=
 
@@ -51,6 +53,9 @@ __docker-env__help(){
     echo "                                           Create when it does not exist"
     echo "                                           default is $DOCKER_ENV_DEFAULT_MACHINE_PATH"
     echo "    --create-machine [ip] [name]           docker-machine create --driver none"
+    echo "    --create-machine-generic [ip]          docker-machine create --driver generic"
+    echo "                             [ssh_user_name]"
+    echo "                             [name]"
     echo "    --deactivate                           unset MACHINE_STORAGE_PATH"
     echo "    --docker-machine-ls                    docker-machine ls"
     echo "    --export [--show] [--quiet|-q]         export cert-files to tgz. [--show] just print import infos."
@@ -64,6 +69,7 @@ __docker-env__help(){
     echo "    --ls|-l                                list all environments"
     echo "    --off                                  --unset + --deactivate"
     echo "    --open|-o                              open $DOCKER_ENV_DEFAULT_DOCKER_PATH in Finder"
+    echo "    --ps                                   docker ps --format \"$DOCKER_PS_TABLE\""
     echo "    --remote                               set DOCKER_REMOTE=1"
     echo "    --show-env                             grep current env vars"
     echo "    --unset|-u                             unset DOCKER_HOST env vars"
@@ -144,7 +150,7 @@ __docker-env__create_machine(){
     local machine_ip=$1
     local machine_name=$2
 
-    __docker-env__validate_storage_path "Run \`docker-env --import\` first, otherwise we would create a new CA now.\nIf you intentionally want to do that, please use \`docker-machine create\`"||return 1
+    __docker-env__validate_storage_path||return 1
 
     docker-machine create --driver none --url tcp://$machine_ip:2376 $machine_name||return 1
     cp -a `find $MACHINE_STORAGE_PATH/certs -type f|grep -v ca-key` $MACHINE_STORAGE_PATH/machines/$machine_name/||return 1
@@ -154,6 +160,48 @@ __docker-env__create_machine(){
     echo "Run this command to configure your shell: docker-env $machine_name"
     return 0
 }
+
+__docker-env__create_machine_generic(){
+    local create
+    local machine_ip=$1
+    local ssh_user_name=$2
+    local machine_name=$3
+
+    echo "Attention!"
+    echo "This command will overwrite remote certificates."
+    echo "Should we proceed? [y/N] "
+    read create
+    if ! [[ $create == y ]]; then
+        return 1
+    fi
+
+    if ! __docker-env__validate_storage_path; then
+        case $? in
+            2)
+                echo "If you know what you are doing, we nevertheless could create it."
+                echo "Should we create it? [y/N] "
+                read create
+                if ! [[ $create == y ]]; then
+                    return 1
+                fi
+                ;;
+            *)
+                return 1
+                ;;
+        esac
+    fi
+
+    if ! docker-machine create --driver generic --generic-ip-address $machine_ip --generic-ssh-user $ssh_user_name $machine_name; then
+        echo "Check \`docker-machine ls\`"
+        return 1
+    fi
+    echo "---"
+    echo "Done. You could use docker-machine now for specific commands."
+    echo "---"
+    echo "Run this command to configure your shell: docker-env $machine_name"
+    return 0
+}
+
 
 __docker-env__show_vars(){
     echo
@@ -180,8 +228,8 @@ __docker-env__validate_storage_path(){
 
     if [[ ! -d $MACHINE_STORAGE_PATH/certs ]]; then
         echo Directory $MACHINE_STORAGE_PATH/certs does not exist.
-        echo -e $@
-        return 1
+        echo -e "Run \`docker-env --import\` first, otherwise we would create a new CA now.\nIf you intentionally want to do that, please use \`docker-machine create\`"
+        return 2
     fi
     return 0
 }
@@ -259,11 +307,32 @@ docker-env(){
                 fi
 
                 if [[ ! $optarg_2 || $optarg_2 == -* ]]; then
-                    echo "Name (fqdn) is missing"
+                    echo "Machine name is missing"
                     return 1
                 fi
 
                 __docker-env__create_machine $optarg $optarg_2
+                return $?
+                ;;
+            --create-machine-generic)
+                local optarg_3=${args[$((i+2))]}
+
+                if [[ ! $optarg || $optarg == -* ]]; then
+                    echo "IP is missing"
+                    return 1
+                fi
+
+                if [[ ! $optarg_2 || $optarg_2 == -* ]]; then
+                    echo "Ssh username is missing"
+                    return 1
+                fi
+
+                if [[ ! $optarg_3 || $optarg_3 == -* ]]; then
+                    echo "Machine name is missing"
+                    return 1
+                fi
+
+                __docker-env__create_machine_generic $optarg $optarg_2 $optarg_3
                 return $?
                 ;;
             --deactivate)
@@ -425,6 +494,10 @@ docker-env(){
                 open $DOCKER_ENV_DEFAULT_DOCKER_PATH
                 return
                 ;;
+            --ps)
+                docker ps --format "$DOCKER_PS_TABLE"
+                return
+                ;;
             --remote)
                 export DOCKER_REMOTE=1
                 return
@@ -473,7 +546,24 @@ _docker-env(){
     local cas="`ls $DOCKER_ENV_MACHINE_PATH` default"
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local dmachines="`docker-machine ls -t 0 -q` --docker-machine-ls --help"
-    local options="--docker-machine-ls --ls --open --unset --activate --export --help --import --import-create --create-machine --deactivate --remote --show-env --off"
+    local options="\
+--activate \
+--create-machine-generic \
+--create-machine \
+--deactivate \
+--docker-machine-l s
+--export \
+--help \
+--import-create \
+--import \
+--ls \
+--off \
+--open \
+--ps \
+--remote \
+--show-env \
+--unset \
+"\
     local prev="${COMP_WORDS[COMP_CWORD-1]}"
 
     if [ $COMP_CWORD == 1 ]; then
