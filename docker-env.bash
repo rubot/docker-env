@@ -551,7 +551,7 @@ _docker-env(){
 --create-machine-generic \
 --create-machine \
 --deactivate \
---docker-machine-l s
+--docker-machine-ls \
 --export \
 --help \
 --import-create \
