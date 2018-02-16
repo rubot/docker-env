@@ -1,6 +1,6 @@
 
 
-export DOCKER_ENV_DEFAULT_DOCKER_PATH=~/.docker
+export DOCKER_ENV_DEFAULT_DOCKER_PATH=${DOCKER_ENV_DEFAULT_DOCKER_PATH:-~/.docker}
 export DOCKER_ENV_DEFAULT_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/machine
 export DOCKER_ENV_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env
 export DOCKER_PS_TABLE="table {{.ID}}\t{{.Names}}\t{{.Ports}}"
@@ -58,6 +58,7 @@ __docker-env__help(){
     echo "                             [name]"
     echo "    --deactivate                           unset MACHINE_STORAGE_PATH"
     echo "    --docker-machine-ls                    docker-machine ls"
+    echo "    --docker-machine-env                   docker-machine env"
     echo "    --export [--show] [--quiet|-q]         export cert-files to tgz. [--show] just print import infos."
     echo "                      [--ca]               do not exclude ca-key.pem"
     echo "                      [--noca]             although ca-key.pem exists"
@@ -343,6 +344,10 @@ docker-env(){
                 docker-machine ls
                 return
                 ;;
+            --docker-machine-env)
+                docker-machine env $optarg
+                return
+                ;;
             --export)
                 local ca
                 local excludes
@@ -552,6 +557,7 @@ _docker-env(){
 --create-machine \
 --deactivate \
 --docker-machine-ls \
+--docker-machine-env \
 --export \
 --help \
 --import-create \
@@ -579,6 +585,9 @@ _docker-env(){
         case "$prev" in
           --activate)
             COMPREPLY=($(compgen -W "$cas" -- ${cur}));
+            ;;
+          --docker-machine-env)
+            COMPREPLY=($(compgen -W "$dmachines" -- ${cur}));
             ;;
           --import|--import-create)
             COMPREPLY=($(compgen -W "$(ls *.tgz 2>/dev/null)" -- ${cur}));
