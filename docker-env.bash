@@ -57,8 +57,7 @@ __docker-env__help(){
     echo "                             [ssh_user_name]"
     echo "                             [name]"
     echo "    --deactivate                           unset MACHINE_STORAGE_PATH"
-    echo "    --docker-machine-ls                    docker-machine ls"
-    echo "    --docker-machine-env                   docker-machine env"
+    echo "    --env-docker-machine                   docker-machine env"
     echo "    --export [--show] [--quiet|-q]         export cert-files to tgz. [--show] just print import infos."
     echo "                      [--ca]               do not exclude ca-key.pem"
     echo "                      [--noca]             although ca-key.pem exists"
@@ -68,11 +67,12 @@ __docker-env__help(){
     echo "    --import-create [name.tgz] [ip] [name] import tgz to current env and create machine"
     echo "                                           This puts certs in machine folder"
     echo "    --ls|-l                                list all environments"
+    echo "    --ls-docker-machine                    docker-machine ls"
     echo "    --off                                  --unset + --deactivate"
     echo "    --open|-o                              open $DOCKER_ENV_DEFAULT_DOCKER_PATH in Finder"
     echo "    --ps                                   docker ps --format \"$DOCKER_PS_TABLE\""
     echo "    --remote                               set DOCKER_REMOTE=1"
-    echo "    --show-env                             grep current env vars"
+    echo "    --env-show                             grep current env vars"
     echo "    --unset|-u                             unset DOCKER_HOST env vars"
     echo
     echo "docker-machine_name [--quiet|-q]  export DOCKER_HOST env vars for docker-machine host"
@@ -147,6 +147,31 @@ __docker-env__help_export(){
     echo
 }
 
+
+__docker-env____read(){
+    if [[ $DEBUG ]]; then
+        echo $1
+        return
+    fi
+    local var
+    read var
+    echo $var
+}
+
+
+____docker-env__run(){
+    if [[ $DEBUG ]]; then
+        echo DEBUG mode enabled. To disable execute: unset DEBUG && echo "#####"
+        echo
+        echo $@
+        return
+    fi
+
+    echo Executing: $@
+    eval $@
+}
+
+
 __docker-env__create_machine(){
     local machine_ip=$1
     local machine_name=$2
@@ -162,16 +187,18 @@ __docker-env__create_machine(){
     return 0
 }
 
+
 __docker-env__create_machine_generic(){
     local create
     local machine_ip=$1
     local ssh_user_name=$2
     local machine_name=$3
+    shift 3
 
     echo "Attention!"
     echo "This command will overwrite remote certificates."
     echo "Should we proceed? [y/N] "
-    read create
+    create=`__docker-env____read y`
     if ! [[ $create == y ]]; then
         return 1
     fi
@@ -181,7 +208,7 @@ __docker-env__create_machine_generic(){
             2)
                 echo "If you know what you are doing, we nevertheless could create it."
                 echo "Should we create it? [y/N] "
-                read create
+                create=`__docker-env____read y`
                 if ! [[ $create == y ]]; then
                     return 1
                 fi
@@ -192,7 +219,7 @@ __docker-env__create_machine_generic(){
         esac
     fi
 
-    if ! docker-machine create --driver generic --generic-ip-address $machine_ip --generic-ssh-user $ssh_user_name $machine_name; then
+    if ! ____docker-env__run docker-machine create --driver generic --generic-ip-address $machine_ip --generic-ssh-user $ssh_user_name $@ $machine_name; then
         echo "Check \`docker-machine ls\`"
         return 1
     fi
@@ -287,7 +314,7 @@ docker-env(){
                     else
                         echo "Not a directory: $DOCKER_ENV_MACHINE_PATH/$name"
                         echo -n "Should we create it? [y/N] "
-                        read create
+                        create=`__docker-env____read y`
                         if [[ $create == y ]]; then
                             mkdir -p $DOCKER_ENV_MACHINE_PATH/$name
                         else
@@ -312,7 +339,7 @@ docker-env(){
                     return 1
                 fi
 
-                __docker-env__create_machine $optarg $optarg_2
+                __docker-env__create_machine $optarg $optarg_2 ${args[@]:3}
                 return $?
                 ;;
             --create-machine-generic)
@@ -333,18 +360,18 @@ docker-env(){
                     return 1
                 fi
 
-                __docker-env__create_machine_generic $optarg $optarg_2 $optarg_3
+                __docker-env__create_machine_generic $optarg $optarg_2 $optarg_3 ${args[@]:4}
                 return $?
                 ;;
             --deactivate)
                 unset MACHINE_STORAGE_PATH
                 return
                 ;;
-            --docker-machine-ls)
+            --ls-docker-machine)
                 docker-machine ls
                 return
                 ;;
-            --docker-machine-env)
+            --env-docker-machine)
                 docker-machine env $optarg
                 return
                 ;;
@@ -507,7 +534,7 @@ docker-env(){
                 export DOCKER_REMOTE=1
                 return
                 ;;
-            --show-env)
+            --env-show)
                 __docker-env__show_vars
                 return
                 ;;
@@ -550,14 +577,14 @@ docker-env(){
 _docker-env(){
     local cas="`ls $DOCKER_ENV_MACHINE_PATH` default"
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    local dmachines="`docker-machine ls -t 0 -q` --docker-machine-ls --help"
+    local dmachines="`docker-machine ls -t 0 -q` --ls-docker-machine --help"
     local options="\
 --activate \
 --create-machine-generic \
 --create-machine \
 --deactivate \
---docker-machine-ls \
---docker-machine-env \
+--ls-docker-machine \
+--env-docker-machine \
 --export \
 --help \
 --import-create \
@@ -567,7 +594,7 @@ _docker-env(){
 --open \
 --ps \
 --remote \
---show-env \
+--env-show \
 --unset \
 "\
     local prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -586,7 +613,7 @@ _docker-env(){
           --activate)
             COMPREPLY=($(compgen -W "$cas" -- ${cur}));
             ;;
-          --docker-machine-env)
+          --env-docker-machine)
             COMPREPLY=($(compgen -W "$dmachines" -- ${cur}));
             ;;
           --import|--import-create)
