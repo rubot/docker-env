@@ -368,7 +368,7 @@ docker-env(){
                 return
                 ;;
             --ls-docker-machine)
-                docker-machine ls
+                docker-machine ls -t 1
                 return
                 ;;
             --env-docker-machine)
