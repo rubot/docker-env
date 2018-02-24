@@ -550,7 +550,17 @@ docker-env(){
                     else
                      echo " (empty)"
                     fi
-                 done)|column -t
+                 done)\
+                 <(\
+                 for d in `ls -d -1 $DOCKER_ENV_MACHINE_PATH/**`; do
+                    test -f $d/certs/ca.pem && openssl x509 -noout -in $d/certs/ca.pem -fingerprint 2>/dev/null|cut -d= -f2|cut -c1-14||echo -
+                 done)\
+                 <(\
+                 for d in `ls -d -1 $DOCKER_ENV_MACHINE_PATH/**`; do
+                    test -f $d/certs/cert.pem && openssl x509 -noout -in $d/certs/cert.pem -fingerprint 2>/dev/null|cut -d= -f2|cut -c1-14||echo -
+                 done)\
+                |column -t -c2
+
                  return
                  ;;
             --off)
