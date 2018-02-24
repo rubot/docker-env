@@ -3,6 +3,7 @@
 export DOCKER_ENV_DEFAULT_DOCKER_PATH=${DOCKER_ENV_DEFAULT_DOCKER_PATH:-~/.docker}
 export DOCKER_ENV_DEFAULT_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/machine
 export DOCKER_ENV_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env
+export DOCKER_ENV_EXPORTS_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env/.exports
 export DOCKER_PS_TABLE="table {{.ID}}\t{{.Names}}\t{{.Ports}}"
 
 # Disable /etc/hosts for all ssh completions
@@ -70,6 +71,7 @@ __docker-env__help(){
     echo "    --ls-docker-machine                    docker-machine ls"
     echo "    --off                                  --unset + --deactivate"
     echo "    --open|-o                              open $DOCKER_ENV_DEFAULT_DOCKER_PATH in Finder"
+    echo "    --open-exports|-p                      open $DOCKER_ENV_EXPORTS_PATH in Finder"
     echo "    --ps                                   docker ps --format \"$DOCKER_PS_TABLE\""
     echo "    --remote                               set DOCKER_REMOTE=1"
     echo "    --env-show                             grep current env vars"
@@ -274,6 +276,7 @@ docker-env(){
 
     [[ ! `which docker-machine` ]] && echo docker-machine is not installed && return 1
     [[ ! -d $DOCKER_ENV_MACHINE_PATH ]] && mkdir -p $DOCKER_ENV_MACHINE_PATH
+    [[ ! -d $DOCKER_ENV_EXPORTS_PATH ]] && mkdir -p $DOCKER_ENV_EXPORTS_PATH
 
     for opt in ${args[@]}; do
         [[ $opt =~ ^-q$|^--quiet$ ]] && quiet=1
@@ -344,6 +347,7 @@ docker-env(){
                 ;;
             --create-machine-generic)
                 local optarg_3=${args[$((i+2))]}
+                local optarg_4=${args[$((i+3))]}
 
                 if [[ ! $optarg || $optarg == -* ]]; then
                     echo "IP is missing"
@@ -358,6 +362,16 @@ docker-env(){
                 if [[ ! $optarg_3 || $optarg_3 == -* ]]; then
                     echo "Machine name is missing"
                     return 1
+                fi
+
+                if [[ ! $optarg_4 ]]; then
+                    echo "Add additional docker-machine flags, or add --default to go on."
+                    return 1
+                elif [[ $optarg_4 == --default ]]; then
+                    #shift
+                    #TODO: improve args mess
+                    __docker-env__create_machine_generic $optarg $optarg_2 $optarg_3 ${args[@]:5}
+                    return $?
                 fi
 
                 __docker-env__create_machine_generic $optarg $optarg_2 $optarg_3 ${args[@]:4}
@@ -404,7 +418,6 @@ docker-env(){
                     return
                 fi
 
-
                 if [[ ! $noca || $ca ]]; then
                     if [[ ! -f $MACHINE_STORAGE_PATH/certs/ca-key.pem ]]; then
                         echo No authority found
@@ -417,14 +430,21 @@ docker-env(){
                     return 1
                 fi
 
-                excludes=" --exclude .DS_Store"
+                if [[ -f $DOCKER_ENV_EXPORTS_PATH/$name.tgz ]]; then
+                    mv $DOCKER_ENV_EXPORTS_PATH/$name.tgz $DOCKER_ENV_EXPORTS_PATH/`date '+%Y%m%d%H%M%S'`_$name.tgz
+                fi
+
+                excludes=" --exclude .DS_Store --exclude ._*"
                 [[ ! $ca ]] && excludes+=" --exclude ca-key.pem"
 
                 if [[ ! $quiet == 1 ]]; then
                     q=v
                     __docker-env__help_export $name
                 fi
-                tar c${q}zf $name.tgz -C $MACHINE_STORAGE_PATH/certs$excludes .
+                tar c${q}zf $DOCKER_ENV_EXPORTS_PATH/$name.tgz -C $MACHINE_STORAGE_PATH/certs$excludes .
+                cp $DOCKER_ENV_EXPORTS_PATH/$name.tgz .
+                echo "Export done. File: $DOCKER_ENV_EXPORTS_PATH/$name.tgz"
+                echo "Copied into current directory. You can savely share and delete this file."
                 return
                 ;;
             --help)
@@ -432,7 +452,7 @@ docker-env(){
                 return
                 ;;
             --import)
-                local tgz
+                local tgz tgz_dir tgz_file
                 tgz=$optarg
 
 
@@ -442,16 +462,33 @@ docker-env(){
                 fi
 
                 if [[ ! -f $tgz ]]; then
-                    echo "Not a file: $tgz"
+                    tgz=$DOCKER_ENV_EXPORTS_PATH/$tgz
+                fi
+
+                if [[ ! -f $tgz ]]; then
+                    echo "File not found: $tgz"
                     return 1
                 fi
 
                 __docker-env__validate_storage_path create_or_fail_if_exist||return 1
 
+                tgz_dir=`dirname $tgz`
+                tgz_file=`basename $tgz`
+
                 if tar tzf $tgz 1>/dev/null; then
                     tar xvzf $tgz -C $MACHINE_STORAGE_PATH/certs
                 else
                     return 1
+                fi
+
+                if [[ ! "$tgz_dir" == "$DOCKER_ENV_EXPORTS_PATH" ]]; then
+
+                    if [[ -f $DOCKER_ENV_EXPORTS_PATH/$tgz_file ]]; then
+                        mv $DOCKER_ENV_EXPORTS_PATH/$tgz_file $DOCKER_ENV_EXPORTS_PATH/`date '+%Y%m%d%H%M%S'`_$tgz_file
+                    fi
+
+                    mv $tgz $DOCKER_ENV_EXPORTS_PATH/
+                    echo "Moved $tgz to $DOCKER_ENV_EXPORTS_PATH/ for future imports."
                 fi
                 return
                 ;;
@@ -526,6 +563,10 @@ docker-env(){
                 open $DOCKER_ENV_DEFAULT_DOCKER_PATH
                 return
                 ;;
+            --open-exports|-p)
+                open $DOCKER_ENV_EXPORTS_PATH
+                return
+                ;;
             --ps)
                 docker ps --format "$DOCKER_PS_TABLE"
                 return
@@ -592,6 +633,7 @@ _docker-env(){
 --ls \
 --off \
 --open \
+--open-exports \
 --ps \
 --remote \
 --env-show \
@@ -617,7 +659,7 @@ _docker-env(){
             COMPREPLY=($(compgen -W "$dmachines" -- ${cur}));
             ;;
           --import|--import-create)
-            COMPREPLY=($(compgen -W "$(ls *.tgz 2>/dev/null)" -- ${cur}));
+            COMPREPLY=($(compgen -W "$(ls *.tgz 2>/dev/null)$(ls $DOCKER_ENV_EXPORTS_PATH/*.tgz 2>/dev/null)" -- ${cur}));
             ;;
           --export)
             COMPREPLY=($(compgen -W "--show --ca --noca --quiet" -- ${cur}));
