@@ -7,7 +7,7 @@
 Basically this just exports `MACHINE_STORAGE_PATH` which is used by [docker-machine](https://docs.docker.com/machine/install-machine/).
 If you ever had the same known problem, dealing with docker-machine/docker and certificates like described in [1799](https://github.com/docker/machine/issues/1799) or [2229](https://github.com/docker/machine/issues/2229), this is how I handle it.
 
-In short for understanding or just doing it manual.
+Here is what happens in short for understanding or just doing it manually.
 The quick hack, which provides VERSION pinning for `docker-machine` docker installation is not implemented in `docker-env`.
 However, it reminds me: [docker/machine/issues#1702](https://github.com/docker/machine/issues/1702#issuecomment-379038023)
 
