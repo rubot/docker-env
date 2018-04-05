@@ -274,7 +274,10 @@ docker-env(){
     local quiet
     local yes
 
-    [[ ! `which docker-machine` ]] && echo docker-machine is not installed && return 1
+    if ! which docker-machine &>/dev/null; then
+        echo docker-machine is not installed
+        return 1
+    fi
     [[ ! -d $DOCKER_ENV_MACHINE_PATH ]] && mkdir -p $DOCKER_ENV_MACHINE_PATH
     [[ ! -d $DOCKER_ENV_EXPORTS_PATH ]] && mkdir -p $DOCKER_ENV_EXPORTS_PATH
 
@@ -626,6 +629,11 @@ docker-env(){
 }
 
 _docker-env(){
+    if ! which docker-machine &>/dev/null; then
+        echo docker-machine is not installed
+        return 1
+    fi
+
     local cas="`ls $DOCKER_ENV_MACHINE_PATH` default"
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local dmachines="`docker-machine ls -t 0 -q` --ls-docker-machine --help"
