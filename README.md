@@ -22,14 +22,14 @@ However, it reminds me: [docker/machine/issues#1702](https://github.com/docker/m
     tar czf $name.tgz -C $MACHINE_STORAGE_PATH/certs .
 
     2. recreate/import driver none (no ssh)
-    export MACHINE_STORAGE_PATH=${MACHINE_STORAGE_PATH:-~/.docker/machine}
+    export MACHINE_STORAGE_PATH=${MACHINE_STORAGE_PATH:-~/.docker/docker_env}
     docker-machine -D create --driver none  --url tcp://$ip:2376 $name
     tar xvzf $name.tgz -C $MACHINE_STORAGE_PATH/certs
     eval "$(docker-machine env $name)"
     tar xvzf $name.tgz --exclude ca-key.pem -C $MACHINE_STORAGE_PATH/machines/$DOCKER_MACHINE_NAME
 
     3. recreate/import driver generic (ssh)
-    export MACHINE_STORAGE_PATH=${MACHINE_STORAGE_PATH:-~/.docker/machine}
+    export MACHINE_STORAGE_PATH=${MACHINE_STORAGE_PATH:-~/.docker/docker_env}
     mkdir -p $MACHINE_STORAGE_PATH/certs
     tar xvzf $name.tgz -C $MACHINE_STORAGE_PATH/certs
     docker-machine -D create --driver generic --generic-ip-address $ip --generic-ssh-user $ssh_user --engine-storage-driver overlay2 --engine-install-url 'https://get.docker.com|head -n-1|cat - <(echo -e "VERSION=18.03.0\nCHANNEL=stable\ndo_install")' $name
