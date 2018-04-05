@@ -1,40 +1,39 @@
 # docker-env
 
+## About
+
+`docker-env` will help maintaining multiple `docker-machine` environments.
+
 Basically this just exports `MACHINE_STORAGE_PATH` which is used by [docker-machine](https://docs.docker.com/machine/install-machine/).
 If you ever had the same known problem, dealing with docker-machine/docker and certificates like described in [1799](https://github.com/docker/machine/issues/1799) or [2229](https://github.com/docker/machine/issues/2229), this is how I handle it.
 
-    Maintains docker-machine environments
+In short for understanding or just doing it manual.
+The quick hack, which provides VERSION pinning for `docker-machine` docker installation is not implemented in `docker-env`.
+However, it reminds me: docker/machine/issues#1702
 
-    Usage: docker-env [option|docker-machine_name]
+    name=<machine-name>
+    ip=<machine-ip>
+    ssh_user=root
 
-    Options:
-        --activate [name|default] [--yes|-y]   export MACHINE_STORAGE_PATH=~/.docker/docker_env/name.
-                                               Create when it does not exist
-                                               default is ~/.docker/machine
-        --create-machine [ip] [name]           docker-machine create --driver none
-        --create-machine-generic [ip]          docker-machine create --driver generic
-                                 [ssh_user_name]
-                                 [name]
-        --deactivate                           unset MACHINE_STORAGE_PATH
-        --docker-machine-ls                    docker-machine ls
-        --export [--show] [--quiet|-q]         export cert-files to tgz. [--show] just print import infos.
-                          [--ca]               do not exclude ca-key.pem
-                          [--noca]             although ca-key.pem exists
-        --help                                 this text
-        --import [name.tgz]                    import tgz to current env
-                                               This puts certs to cert folder
-        --import-create [name.tgz] [ip] [name] import tgz to current env and create machine
-                                               This puts certs in machine folder
-        --ls|-l                                list all environments
-        --off                                  --unset + --deactivate
-        --open|-o                              open ~/.docker in Finder
-        --ps                                   docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}"
-        --remote                               export DOCKER_REMOTE=1
-        --show-env                             grep current env vars
-        --unset|-u                             unset DOCKER_HOST env vars
+    1. initially create/export
+    export MACHINE_STORAGE_PATH=${MACHINE_STORAGE_PATH:-~/.docker/machine}
+    docker-machine -D create --driver generic --generic-ip-address $ip --generic-ssh-user $ssh_user --engine-storage-driver overlay2 --engine-install-url 'https://get.docker.com|head -n-1|cat - <(echo -e "VERSION=18.03.0\nCHANNEL=stable\ndo_install")' $name
+    eval "$(docker-machine env $name)"
+    tar czf $name.tgz -C $MACHINE_STORAGE_PATH/certs .
 
-    docker-machine_name [--quiet|-q]  export DOCKER_HOST env vars for docker-machine host
-                                      like: eval "$(docker-machine env name)" does
+    2. recreate/import driver none (no ssh)
+    export MACHINE_STORAGE_PATH=${MACHINE_STORAGE_PATH:-~/.docker/machine}
+    docker-machine -D create --driver none  --url tcp://$ip:2376 $name
+    tar xvzf $name.tgz -C $MACHINE_STORAGE_PATH/certs
+    eval "$(docker-machine env $name)"
+    tar xvzf $name.tgz --exclude ca-key.pem -C $MACHINE_STORAGE_PATH/machines/$DOCKER_MACHINE_NAME
+
+    3. recreate/import driver generic (ssh)
+    export MACHINE_STORAGE_PATH=${MACHINE_STORAGE_PATH:-~/.docker/machine}
+    mkdir -p $MACHINE_STORAGE_PATH/certs
+    tar xvzf $name.tgz -C $MACHINE_STORAGE_PATH/certs
+    docker-machine -D create --driver generic --generic-ip-address $ip --generic-ssh-user $ssh_user --engine-storage-driver overlay2 --engine-install-url 'https://get.docker.com|head -n-1|cat - <(echo -e "VERSION=18.03.0\nCHANNEL=stable\ndo_install")' $name
+    eval "$(docker-machine env $name)"
 
 ## Install
 
