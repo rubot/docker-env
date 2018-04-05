@@ -167,3 +167,40 @@ If docker-env is available [--import-create]
     docker-env --import-create external.tgz $machine_ip $machine_name
 
     docker-env $machine_name
+
+## Usage
+
+    Maintains docker-machine environments
+
+    Usage: docker-env [option|docker-machine_name]
+
+    Options:
+        --activate [name|default] [--yes|-y]   export MACHINE_STORAGE_PATH=/Users/rubot/.docker/docker_env/name.
+                                               Create when it does not exist
+                                               default is /Users/rubot/.docker/machine
+        --create-machine [ip] [name]           docker-machine create --driver none
+        --create-machine-generic [ip]          docker-machine create --driver generic
+                                 [ssh_user_name]
+                                 [name]
+        --deactivate                           unset MACHINE_STORAGE_PATH
+        --env-docker-machine                   docker-machine env
+        --export [--show] [--quiet|-q]         export cert-files to tgz. [--show] just print import infos.
+                          [--ca]               do not exclude ca-key.pem
+                          [--noca]             although ca-key.pem exists
+        --help                                 this text
+        --import [name.tgz]                    import tgz to current env
+                                               This puts certs to cert folder
+        --import-create [name.tgz] [ip] [name] import tgz to current env and create machine
+                                               This puts certs in machine folder
+        --ls|-l                                list all environments
+        --ls-docker-machine                    docker-machine ls
+        --off                                  --unset + --deactivate
+        --open|-o                              open /Users/rubot/.docker in Finder
+        --open-exports|-p                      open /Users/rubot/.docker/docker_env/.exports in Finder
+        --ps                                   docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}"
+        --remote                               set DOCKER_REMOTE=1
+        --env-show                             grep current env vars
+        --unset|-u                             unset DOCKER_HOST env vars
+
+    docker-machine_name [--quiet|-q]  export DOCKER_HOST env vars for docker-machine host
+                                      like: eval "$(docker-machine env name)" does
