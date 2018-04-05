@@ -9,7 +9,7 @@ If you ever had the same known problem, dealing with docker-machine/docker and c
 
 In short for understanding or just doing it manual.
 The quick hack, which provides VERSION pinning for `docker-machine` docker installation is not implemented in `docker-env`.
-However, it reminds me: docker/machine/issues#1702
+However, it reminds me: [docker/machine/issues#1702](https://github.com/docker/machine/issues/1702#issuecomment-379038023)
 
     name=<machine-name>
     ip=<machine-ip>
