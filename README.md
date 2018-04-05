@@ -175,9 +175,9 @@ If docker-env is available [--import-create]
     Usage: docker-env [option|docker-machine_name]
 
     Options:
-        --activate [name|default] [--yes|-y]   export MACHINE_STORAGE_PATH=/Users/rubot/.docker/docker_env/name.
+        --activate [name|default] [--yes|-y]   export MACHINE_STORAGE_PATH=~/.docker/docker_env/name.
                                                Create when it does not exist
-                                               default is /Users/rubot/.docker/machine
+                                               default is ~/.docker/machine
         --create-machine [ip] [name]           docker-machine create --driver none
         --create-machine-generic [ip]          docker-machine create --driver generic
                                  [ssh_user_name]
@@ -195,8 +195,8 @@ If docker-env is available [--import-create]
         --ls|-l                                list all environments
         --ls-docker-machine                    docker-machine ls
         --off                                  --unset + --deactivate
-        --open|-o                              open /Users/rubot/.docker in Finder
-        --open-exports|-p                      open /Users/rubot/.docker/docker_env/.exports in Finder
+        --open|-o                              open ~/.docker in Finder
+        --open-exports|-p                      open ~/.docker/docker_env/.exports in Finder
         --ps                                   docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}"
         --remote                               set DOCKER_REMOTE=1
         --env-show                             grep current env vars
