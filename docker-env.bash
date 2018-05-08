@@ -606,6 +606,7 @@ docker-env(){
 
     if [[ ! $docker_machine_name ]]; then
         __docker-env__help docker_machine_name is missing.
+        docker-machine ls -t 1 || true
         return 1
     fi
 
