@@ -7,6 +7,8 @@ export DOCKER_ENV_EXPORTS_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env/.expor
 export DOCKER_PS_TABLE="table {{.ID}}\t{{.Names}}\t{{.Ports}}"
 
 docker_machine_env="docker-machine env --shell $SHELL"
+mkdir -p $DOCKER_ENV_MACHINE_PATH
+
 
 # Disable /etc/hosts for all ssh completions
 # export COMP_KNOWN_HOSTS_WITH_HOSTFILE=
