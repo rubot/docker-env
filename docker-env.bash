@@ -7,7 +7,10 @@ export DOCKER_ENV_EXPORTS_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env/.expor
 export DOCKER_PS_TABLE="table {{.ID}}\t{{.Names}}\t{{.Ports}}"
 
 docker_machine_env="docker-machine env --shell $SHELL"
-mkdir -p $DOCKER_ENV_MACHINE_PATH
+
+[[ ! -d $DOCKER_ENV_MACHINE_PATH ]] && mkdir -p $DOCKER_ENV_MACHINE_PATH
+[[ ! -d $DOCKER_ENV_EXPORTS_PATH ]] && mkdir -p $DOCKER_ENV_EXPORTS_PATH
+
 
 
 # Disable /etc/hosts for all ssh completions
@@ -282,8 +285,6 @@ docker-env(){
         echo docker-machine is not installed
         return 1
     fi
-    [[ ! -d $DOCKER_ENV_MACHINE_PATH ]] && mkdir -p $DOCKER_ENV_MACHINE_PATH
-    [[ ! -d $DOCKER_ENV_EXPORTS_PATH ]] && mkdir -p $DOCKER_ENV_EXPORTS_PATH
 
     for opt in ${args[@]}; do
         [[ $opt =~ ^-q$|^--quiet$ ]] && quiet=1
