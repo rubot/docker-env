@@ -6,6 +6,8 @@ export DOCKER_ENV_MACHINE_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env
 export DOCKER_ENV_EXPORTS_PATH=$DOCKER_ENV_DEFAULT_DOCKER_PATH/docker_env/.exports
 export DOCKER_PS_TABLE="table {{.ID}}\t{{.Names}}\t{{.Ports}}"
 
+docker_machine_env="docker-machine env --shell $SHELL"
+
 # Disable /etc/hosts for all ssh completions
 # export COMP_KNOWN_HOSTS_WITH_HOSTFILE=
 
@@ -78,7 +80,7 @@ __docker-env__help(){
     echo "    --unset|-u                             unset DOCKER_HOST env vars"
     echo
     echo "docker-machine_name [--quiet|-q]  export DOCKER_HOST env vars for docker-machine host"
-    echo "                                  like: eval \"\$(docker-machine env name)\" does"
+    echo "                                  like: eval \"\$($docker_machine_env name)\" does"
     echo
     [[ $@ ]] && echo -e "Error: $@"
 }
@@ -104,7 +106,7 @@ __docker-env__help_export(){
     echo "    docker-machine create --driver none --url tcp://\$machine_ip:2376 \$machine_name"
     echo "    cp -a \$MACHINE_CERTS/*.pem \$MACHINE_PATH/"
     echo
-    echo "    eval \"\$(docker-machine env \$machine_name)\""
+    echo "    eval \"\$($docker_machine_env \$machine_name)\""
     echo
     echo "2. If docker-env is available [--import --create]"
     echo
@@ -132,7 +134,7 @@ __docker-env__help_export(){
     echo "    tar xvzf $1.tgz -C \$MACHINE_PATH"
     echo "    sed -i.bak \"s/\${REGC}/\${REGM}/\" \$MACHINE_PATH/config.json"
     echo
-    echo "    eval \"\$(docker-machine env \$machine_name)\""
+    echo "    eval \"\$($docker_machine_env \$machine_name)\""
     echo
     echo "4. If docker-env is available [--import-create]"
     echo
@@ -302,7 +304,7 @@ docker-env(){
 
                 if [[ $name == default ]]; then
 
-                    eval "$(docker-machine env -u)"
+                    eval $($docker_machine_env -u)
                     unset DOCKER_REMOTE
                     export MACHINE_STORAGE_PATH=$DOCKER_ENV_DEFAULT_MACHINE_PATH
                     return
@@ -329,7 +331,7 @@ docker-env(){
                     fi
                 fi
 
-                eval "$(docker-machine env -u)"
+                eval "$($docker_machine_env -u)"
                 unset DOCKER_REMOTE
                 export MACHINE_STORAGE_PATH=$DOCKER_ENV_MACHINE_PATH/$name
                 return
@@ -389,7 +391,7 @@ docker-env(){
                 return
                 ;;
             --env-docker-machine)
-                docker-machine env $optarg
+                $docker_machine_env $optarg
                 return
                 ;;
             --export)
@@ -569,7 +571,7 @@ docker-env(){
             --off)
                 unset DOCKER_REMOTE
                 unset MACHINE_STORAGE_PATH
-                eval "$(docker-machine env -u)"
+                eval "$($docker_machine_env -u)"
                 return
                 ;;
             --open|-o)
@@ -594,7 +596,7 @@ docker-env(){
                 ;;
             --unset|-u)
                 unset DOCKER_REMOTE
-                eval "$(docker-machine env -u)"
+                eval "$($docker_machine_env -u)"
                 return
                 ;;
             *)
@@ -610,16 +612,16 @@ docker-env(){
         return 1
     fi
 
-    if ! docker-machine env $docker_machine_name &>/dev/null; then
+    if ! $docker_machine_env $docker_machine_name &>/dev/null; then
         __docker-env__help "Host seems not existing: \"$docker_machine_name\"\nCheck \`docker-machine ls\`"
         return 1
     fi
 
-    if ! docker-machine env $docker_machine_name|grep -q Usage; then
+    if ! $docker_machine_env $docker_machine_name|grep -q Usage; then
 
-        [[ $quiet == 1 ]] || echo Executing: eval \"\$\(docker-machine env $docker_machine_name\)\"
+        [[ $quiet == 1 ]] || echo Executing: eval \"\$\($docker_machine_env $docker_machine_name\)\"
 
-        eval "$(docker-machine env $docker_machine_name)"
+        eval "$($docker_machine_env $docker_machine_name)"
 
     else
         __docker-env__help
